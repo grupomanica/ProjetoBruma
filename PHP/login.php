@@ -10,13 +10,17 @@
     <!-- Ícones -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
-    <link rel="shortcut icon" href="../Assets/favicon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="../ASSETS/IMG/favicon/logo-iconeFullSize.png" type="image/x-icon">
     <link rel="stylesheet" href="../CSS/login.css">
     <script src="../JS/login.js" defer></script>
 
     <title>Bruma | Login</title>
 </head>
 <body>
+    <!-- BOTÃO VOLTAR -->
+    <a href="../index.html" class="back-btn">
+        <i class="bi bi-arrow-left"></i>
+    </a>
 
     <div class="login-container">
 
@@ -24,7 +28,7 @@
 
             <!-- LOGO -->
             <div class="text-center mb-4">
-                <img src="../Assets/logo2.png" width="140">
+                <img src="../ASSETS/IMG/logo-cNomeFullSize.png" width="140">
             </div>
 
             <h3 class="text-center mb-3">Bem-vindo de volta</h3>
@@ -49,11 +53,11 @@
 
             <!-- DIVISOR -->
             <div class="divider">
-                <span>ou</span>
             </div>
 
             <!-- CRIAR CONTA -->
             <p class="text-center mt-3">
+                <br>
                 Não tem conta? 
                 <a href="../PHP/cadastro.php" class="link">Criar agora</a>
             </p>
