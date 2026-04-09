@@ -10,7 +10,7 @@
     <!-- Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
-    <link rel="shortcut icon" href="../Assets/favicon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="../ASSETS/IMG/favicon/logo-iconeFullSize.png" type="image/x-icon">
     <link rel="stylesheet" href="../CSS/servicos.css">
     <script src="../JS/servicos.js" defer></script>
 
@@ -24,7 +24,7 @@
     <div class="container d-flex justify-content-between align-items-center">
 
         <a href="../index.html" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
-            <img src="../Assets/logo.png" class="bi me-2" width="150" role="img">
+            <img src="../ASSETS/IMG/logo-horizontal-roxo.png" class="bi me-2" width="150" role="img">
         </a>
 
         <div class="d-flex align-items-center gap-3">
