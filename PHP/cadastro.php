@@ -10,18 +10,23 @@
     <!-- Ícones -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
+    <link rel="shortcut icon" href="../ASSETS/IMG/favicon/logo-iconeFullSize.png" type="image/x-icon">
     <link rel="stylesheet" href="../CSS/cadastro.css">
 
     <title>Bruma | Cadastro</title>
 </head>
 <body>
+    <!-- BOTÃO VOLTAR -->
+    <a href="../index.html" class="back-btn">
+        <i class="bi bi-arrow-left"></i>
+    </a>
 
 <div class="cadastro-container">
 
     <div class="cadastro-box">
 
         <div class="text-center mb-4">
-            <img src="../Assets/logo2.png" width="140">
+            <img src="../ASSETS/IMG/logo-cNomeFullSize.png" width="140">
         </div>
 
         <h3 class="text-center mb-3">Crie sua conta</h3>
