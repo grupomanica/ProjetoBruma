@@ -42,6 +42,13 @@
 
             <!-- ETAPA 1 -->
             <div class="form-step active">
+                <p class="text-center mt-1">
+                Já tem conta? 
+                <a href="login-parceiro.php" class="link">
+                    Entrar
+                </a>
+                </p>
+            
                 <h5 class="step-title">Dados da clínica</h5>
 
                 <div class="input-group-custom">
@@ -63,13 +70,6 @@
                     Continuar
                 </button>
             </div>
-
-            <p class="text-center mt-3">
-                Já tem conta? 
-                <a href="login-parceiro.php" class="link">
-                    Entrar
-                </a>
-            </p>
 
             <!-- ETAPA 2 -->
             <div class="form-step">
@@ -96,22 +96,32 @@
                 </div>
 
                 <div class="step-actions">
-                    <button type="button" class="btn btn-outline-light prev-btn">Voltar</button>
+                    <button type="button" class="btn cadastro-btn prev-btn">Voltar</button>
                     <button type="button" class="btn cadastro-btn next-btn">Continuar</button>
                 </div>
             </div>
 
             <!-- ETAPA 3 -->
             <div class="form-step">
-                <h5 class="step-title">Serviços e acesso</h5>
+                <h5 class="step-title">Serviços e Acesso</h5>
 
                 <div class="section-label">Procedimentos</div>
 
-                <div class="procedimentos">
-                    <label><input type="checkbox"> Limpeza</label>
-                    <label><input type="checkbox"> Botox</label>
-                    <label><input type="checkbox"> Preenchimento</label>
-                </div>
+                
+                    <label for="procedimentos">
+                    <select name="procedimentos" id="procedimentos">
+                        <option value="botox">Botox</option>
+                        <option value="acido-hialuronico">Preenchimento com Ácido Hialurônico</option>
+                        <option value="bioestimuladores-colageno">Bioestimuladores de Colágeno</option>
+                        <option value="skinbooster">Skinbooster</option>
+                        <option value="fios-sustentacao">Fios de Sustentação</option>
+                        <option value="laser">Tratamento à Laser</option>
+                        <option value="lip">LIP - Luz Intensa Pulsada</option>
+                        <option value="microagulhamento">Microagulhamento</option>
+                        <option value="peeling">Peeling de Fenol</option>
+                    </select>
+                    </label>
+                
 
                 <div class="input-group-custom mt-2">
                     <i class="bi bi-plus-circle"></i>
@@ -144,7 +154,7 @@
                 </div>
 
                 <div class="step-actions">
-                    <button type="button" class="btn btn-outline-light prev-btn">Voltar</button>
+                    <button type="button" class="btn cadastro-btn prev-btn">Voltar</button>
                     <button type="submit" class="btn cadastro-btn">Finalizar cadastro</button>
                 </div>
             </div>
