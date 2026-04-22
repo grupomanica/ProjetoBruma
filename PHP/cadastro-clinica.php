@@ -36,14 +36,7 @@
             <hr>
 
             <!-- ETAPA 1 -->
-            <div class="form-step active">
-                <p class="text-center mt-1">
-                Já tem conta? 
-                <a href="login-clinica.php" class="link">
-                    Entrar
-                </a>
-                </p>
-            
+            <div class="form-step active">            
                 <div class="input-group-custom">
                     <i class="bi bi-building"></i>
                     <input type="text" placeholder="Nome da clínica" required>
@@ -62,6 +55,14 @@
                 <button type="button" class="btn cadastro-btn w-100 next-btn">
                     Continuar
                 </button>
+
+                <br><br>
+                <p class="text-center mt-1">
+                Já tem conta? 
+                <a href="login-clinica.php" class="link">
+                    Entrar
+                </a>
+                </p>
             </div>
 
             <!-- ETAPA 2 -->
