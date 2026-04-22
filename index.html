@@ -1,130 +1,126 @@
-    <!DOCTYPE html>
-    <html lang="pt-BR">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <link rel="shortcut icon" href="ASSETS/IMG/favicon/logo-iconeFullSize.png" type="image/x-icon">
-        
-        <!-- Bootstrap CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="shortcut icon" href="ASSETS/IMG/favicon/logo-iconeFullSize.png" type="image/x-icon">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <link rel="stylesheet" href="CSS/index.css">
+    <script src="JS/funcoes.js" defer></script>
 
-        <!-- Bootstrap Icons -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-        <!-- Ícones -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-        
-        <link rel="stylesheet" href="CSS/index.css">
-        <script src="JS/funcoes.js" defer></script>
+    <title>Bruma | Início </title>
+</head>
+<body>
+    <!-- CABEÇALHO -->
+    <div class="container border-bottom">
+        <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between">
+            <a href="#" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
+                <img src="ASSETS/IMG/logo-horizontal-roxo.png" class="bi me-2" width="150" role="img" aria-label="Bootstrap"/>
+            </a>
+            
+            <!-- MANTER OCULTO ATÉ CORREÇÃO
+            <ul id="nav-header" class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+                <li><a href="#hero" class="nav-link px-2 link-secondary">Início</a></li>
+                <li><a href="#steps-section" class="nav-link px-2 link-dark">Sobre</a></li>
+                <li><a href="#cta-final" class="nav-link px-2 link-dark">Agendar</a></li>
+            </ul>
+            -->
 
-        <title>Bruma | Início </title>
-    </head>
-    <body>
-        <!-- CABEÇALHO -->
-        <div class="container border-bottom">
-            <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between">
-                <a href="#" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
-                    <img src="ASSETS/IMG/logo-horizontal-roxo.png" class="bi me-2" width="150" role="img" aria-label="Bootstrap"/>
+            <div class="col-md-auto text-end d-flex align-items-center gap-3">
+                <!-- LINK PARA CLÍNICA -->
+                <a href="PHP/login-clinica.php" class="link-clinica">
+                    Sou clínica
                 </a>
-                
-                <!-- MANTER OCULTO ATÉ CORREÇÃO
-                <ul id="nav-header" class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-                    <li><a href="#hero" class="nav-link px-2 link-secondary">Início</a></li>
-                    <li><a href="#steps-section" class="nav-link px-2 link-dark">Sobre</a></li>
-                    <li><a href="#cta-final" class="nav-link px-2 link-dark">Agendar</a></li>
-                </ul>
-                -->
 
-                <div class="col-md-auto text-end d-flex align-items-center gap-3">
-                    <!-- LINK PARA CLÍNICA -->
-                    <a href="PHP/login-clinica.php" class="link-clinica">
-                        Sou clínica
-                    </a>
-
-                    <!-- BOTÃO PRINCIPAL -->
-                    <a href="PHP/login.php">
-                        <button type="button" class="btn btn-outline-bruma">
-                            Entrar
-                        </button>
-                    </a>
-
-                    <!-- BOTÃO DE CADASTRO -->
-                     <a href="PHP/cadastro.php">
-                        <button type="button" class="btn btn-cadastro-bruma">
-                            Cadastrar
-                        </button>
-                    </a>
-                </div>
-            </header>     
-        </div>
-
-
-        <!-- SEÇÃO SOBRE O BRUMA -->
-        <section id="hero" class="hero d-flex align-items-center">
-
-            <video autoplay muted loop playsinline class="hero-video">
-                <source src="ASSETS/esthetician-pexels-gustavo-fring.mp4" type="video/mp4">
-            </video>
-
-        <div class="container text-center text-lg-start">
-            <div class="row align-items-center">
-                <!-- TEXTO -->
-                <div class="col-lg-6 hero-text">
-                    <h1 class="fade-in">
-                        Encontre, compare e marque seus procedimentos de beleza com facilidade
-                    </h1>
-
-                    <p class="fade-in delay-1">
-                        O Bruma conecta você às melhores clínicas, permitindo comparar preços, 
-                        localizar serviços próximos e agendar apenas clicando.
-                    </p>
-
-                    <button class="btn hero-btn fade-in delay-2" onclick="scrollToNext()">
-                        Explorar mais
+                <!-- BOTÃO PRINCIPAL -->
+                <a href="PHP/login.php">
+                    <button type="button" class="btn btn-outline-bruma">
+                        Entrar
                     </button>
-                </div>
+                </a>
 
-                <!-- IMAGEM -->
-                <div class="col-lg-6 text-center">
-                    <img src="ASSETS/IMG/ionela-mat-16mHHrY3PUk-unsplash.jpg"
-                        alt="Estética"
-                        class="img-fluid hero-img fade-in delay-3">
-                </div>
+                <!-- BOTÃO DE CADASTRO -->
+                <button type="button" class="btn btn-cadastro-bruma"
+                        data-bs-toggle="modal" data-bs-target="#modalCadastro">
+                    Cadastrar
+                </button>
+            </div>
+        </header>     
+    </div>
 
+
+    <!-- SEÇÃO SOBRE O BRUMA -->
+    <section id="hero" class="hero d-flex align-items-center">
+
+        <video autoplay muted loop playsinline class="hero-video">
+            <source src="ASSETS/esthetician-pexels-gustavo-fring.mp4" type="video/mp4">
+        </video>
+
+    <div class="container text-center text-lg-start">
+        <div class="row align-items-center">
+            <!-- TEXTO -->
+            <div class="col-lg-6 hero-text">
+                <h1 class="fade-in">
+                    Encontre, compare e marque seus procedimentos de beleza com facilidade
+                </h1>
+
+                <p class="fade-in delay-1">
+                    O Bruma conecta você às melhores clínicas, permitindo comparar preços, 
+                    localizar serviços próximos e agendar apenas clicando.
+                </p>
+
+                <button class="btn hero-btn fade-in delay-2" onclick="scrollToNext()">
+                    Explorar mais
+                </button>
             </div>
 
-            <!-- BENEFÍCIOS -->
-            <div class="row mt-5 benefits">
+            <!-- IMAGEM -->
+            <div class="col-lg-6 text-center">
+                <img src="ASSETS/IMG/ionela-mat-16mHHrY3PUk-unsplash.jpg"
+                    alt="Estética"
+                    class="img-fluid hero-img fade-in delay-3">
+            </div>
 
-                <div class="col-md-4 fade-in delay-1">
-                    <div class="benefit-card">
-                        <i class="fas fa-bolt"></i>
-                        <h5>Simples e rápido</h5>
-                        <p>Agende em poucos passos, sem complicação.</p>
-                    </div>
-                </div>
-
-                <div class="col-md-4 fade-in delay-2">
-                    <div class="benefit-card">
-                        <i class="fas fa-search"></i>
-                        <h5>Compare opções</h5>
-                        <p>Veja preços e escolha o melhor para você.</p>
-                    </div>
-                </div>
-
-                <div class="col-md-4 fade-in delay-3">
-                    <div class="benefit-card">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <h5>Perto de você</h5>
-                        <p>Encontre serviços próximos com facilidade.</p>
-                    </div>
-                </div>
-                </div>
         </div>
-        </section>
+
+        <!-- BENEFÍCIOS -->
+        <div class="row mt-5 benefits">
+
+            <div class="col-md-4 fade-in delay-1">
+                <div class="benefit-card">
+                    <i class="fas fa-bolt"></i>
+                    <h5>Simples e rápido</h5>
+                    <p>Agende em poucos passos, sem complicação.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4 fade-in delay-2">
+                <div class="benefit-card">
+                    <i class="fas fa-search"></i>
+                    <h5>Compare opções</h5>
+                    <p>Veja preços e escolha o melhor para você.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4 fade-in delay-3">
+                <div class="benefit-card">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h5>Perto de você</h5>
+                    <p>Encontre serviços próximos com facilidade.</p>
+                </div>
+            </div>
+            </div>
+    </div>
+    </section>
 
 
-            <!-- SEÇÃO COMO FUNCIONA -->
+        <!-- SEÇÃO COMO FUNCIONA -->
         <section id="steps-section" class="steps-section text-center">
         <div class="container">
 
@@ -203,11 +199,9 @@
             </div>
 
             <!-- BOTÃO -->
-            <a href="PHP/login.php">
-                <button class="btn cta-btn">
-                    Criar conta grátis
-                </button>
-            </a>
+            <button class="btn cta-btn" data-bs-toggle="modal" data-bs-target="#modalCadastro">
+                Criar conta grátis
+            </button>
 
 
             <br>
@@ -216,26 +210,86 @@
     </div>
     </section>
 
-        <!-- RODAPÉ -->
-        <div class="container">
-            <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4">
-                <p class="col-md-4 mb-0 text-body-secondary">© 2026 Bruma</p>
-                <a href="/" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none" aria-label="Bootstrap">
-                    <svg class="bi me-2" width="40" height="32" aria-hidden="true">
-                        <use xlink:href="#bootstrap"></use>
-                    </svg>
-                </a>
+    <!-- RODAPÉ -->
+    <div class="container">
+        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4">
+            <p class="col-md-4 mb-0 text-body-secondary">© 2026 Bruma</p>
+            <a href="/" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none" aria-label="Bootstrap">
+                <svg class="bi me-2" width="40" height="32" aria-hidden="true">
+                    <use xlink:href="#bootstrap"></use>
+                </svg>
+            </a>
 
-                <ul id="nav-footer" class="nav col-md-4 justify-content-end">
-                    <li class="nav-item"><a href="#hero" class="nav-link px-2 text-body-secondary">Início</a></li>
-                    <li class="nav-item"><a href="#steps-section" class="nav-link px-2 text-body-secondary">Sobre </a></li>
-                    <li class="nav-item"><a href="#cta-final" class="nav-link px-2 text-body-secondary">Agendar</a></li>
-                </ul>
-            </footer>
+            <ul id="nav-footer" class="nav col-md-4 justify-content-end">
+                <li class="nav-item"><a href="#hero" class="nav-link px-2 text-body-secondary">Início</a></li>
+                <li class="nav-item"><a href="#steps-section" class="nav-link px-2 text-body-secondary">Sobre </a></li>
+                <li class="nav-item"><a href="#cta-final" class="nav-link px-2 text-body-secondary">Agendar</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <button id="btn-topo" onclick="voltarAoTopo()">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- POP UP DE CADASTRO -->
+    <div class="modal fade" id="modalCadastro" tabindex="-1" aria-labelledby="modalCadastroLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div id="modalCadastro-interno" class="modal-content rounded-4 shadow">
+
+        <!-- HEADER -->
+        <div class="modal-header border-0">
+            <h5 class="modal-title fw-bold" id="modalCadastroLabel">Crie sua conta</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
 
-        <button id="btn-topo" onclick="voltarAoTopo()">
-            <i class="fas fa-arrow-up"></i>
-        </button>
-    </body>
-    </html
+        <!-- BODY -->
+        <div class="modal-body px-4 pb-4">
+
+            <p class="text-muted mb-4">
+            É rápido, gratuito e leva menos de 1 minuto.
+            </p>
+
+            <form action="PHP/processa_cadastro.php" method="POST">
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                <label class="form-label">Nome completo</label>
+                <input type="text" name="nome" class="form-control" required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                <label class="form-label">E-mail</label>
+                <input type="email" name="email" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Telefone</label>
+                <input type="tel" name="telefone" class="form-control">
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                <label class="form-label">Senha</label>
+                <input type="password" name="senha" class="form-control" required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                <label class="form-label">Confirmar senha</label>
+                <input type="password" name="confirmar_senha" class="form-control" required>
+                </div>
+            </div>
+
+            <button type="submit" id="btn-cadastro" class="btn w-100 mt-3">
+                Criar conta
+            </button>
+
+            </form>
+
+        </div>
+        </div>
+    </div>
+    </div>
+</body>
+</html

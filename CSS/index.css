@@ -52,6 +52,32 @@ body {
     color: white;
 }
 
+/* MODAL DE CADASTRO*/
+
+.modal-content {
+    border: none;
+}
+
+.modal-title {
+    color: #2c0c64;
+}
+
+#btn-cadastro{
+    background: linear-gradient(135deg, #fbaa1c, #fa7c47);
+    border: none;
+    border-radius: 30px;
+    padding: 10px;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+#btn-cadastro:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 2,px rgba(250,124,71,0.4);
+}
+
+
+/*BOTÃO CLÍNICA*/
 .link-clinica {
     font-size: 0.9rem;
     color: #6c757d;
