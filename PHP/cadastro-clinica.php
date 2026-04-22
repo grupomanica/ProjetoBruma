@@ -39,7 +39,7 @@
             <div class="form-step active">
                 <p class="text-center mt-1">
                 Já tem conta? 
-                <a href="login-parceiro.php" class="link">
+                <a href="login-clinica.php" class="link">
                     Entrar
                 </a>
                 </p>
