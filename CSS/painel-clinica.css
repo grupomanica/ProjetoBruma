@@ -1,0 +1,82 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #f5f6fa;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    background: #2c0c64;
+    position: fixed;
+    padding: 20px;
+    color: white;
+}
+
+.sidebar img {
+    width: 120px;
+    margin-bottom: 30px;
+}
+
+.sidebar a {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    color: #ddd;
+    text-decoration: none;
+    border-radius: 8px;
+    margin-bottom: 5px;
+}
+
+.sidebar a.active {
+    background: #9c15fc;
+    color: white;
+}
+
+/* MAIN */
+.main {
+    margin-left: 240px;
+    padding: 20px 30px;
+}
+
+/* TOPBAR */
+.topbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user img {
+    width: 35px;
+    border-radius: 50%;
+}
+
+/* CONTEÚDO */
+.content-box {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    border: 1px solid #eee;
+}
+
+/* MINI CARDS */
+.card-mini {
+    background: #fafafa;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #eee;
+}
+
+.card-mini strong {
+    display: block;
+    font-size: 1.4rem;
+    margin-top: 5px;
+    color: #9c15fc;
+}

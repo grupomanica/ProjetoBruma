@@ -57,10 +57,13 @@
         <div class="col-md-3">
             <div class="filtro-box">
                 <i class="bi bi-geo-alt"></i>
-                <select class="form-select filtro" data-filter="bairro">
-                    <option value="">Bairro</option>
-                    <option>Moema</option>
-                    <option>Pinheiros</option>
+                <select class="form-select filtro" data-filter="regiao">
+                    <option value="">Região</option>
+                    <option value="central">Central</option>
+                    <option value="norte">Norte</option>
+                    <option value="sul">Sul</option>
+                    <option value="leste">Leste</option>
+                    <option value="oeste">Oeste</option>
                 </select>
             </div>
         </div>
