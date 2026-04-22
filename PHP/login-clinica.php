@@ -12,13 +12,12 @@
     <!-- Ícones -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="../CSS/login-parceiro.css">
+    <link rel="stylesheet" href="../CSS/login-clinica.css">
 
     <title>Bruma | Área da Clínica</title>
 </head>
 
 <body>
-
 <!-- BOTÃO VOLTAR -->
 <a href="../index.html" class="back-btn">
     <i class="bi bi-arrow-left"></i>
@@ -27,16 +26,16 @@
 <div class="login-container">
 
     <form class="login-form" action="" method="POST">
-
         <!-- LOGO -->
-        <div class="text-center mb-3">
-             <img src="../ASSETS/IMG/logo-cNomeFullSize.png" width="100">
+        <div class="text-center mb-4">
+             <img src="../ASSETS/IMG/logo-cNomeFullSize.png" width="140">
         </div>
 
-        <h3 class="text-center mb-2">Área da clínica</h3>
+        <h3 class="text-center mb-3">Área da clínica</h3>
         <p class="text-center subtitle">
             Acesse sua conta e gerencie seus serviços
         </p>
+        <hr>
 
         <!-- EMAIL -->
         <div class="input-group-custom">
@@ -50,24 +49,18 @@
             <input type="password" name="senha" placeholder="Senha" required>
         </div>
 
-        <!-- ESQUECI SENHA -->
-        <div class="text-end mb-2">
-            <a href="#" class="link small">Esqueci minha senha</a>
-        </div>
-
         <!-- BOTÃO -->
         <button type="submit" class="btn login-btn w-100">
             Entrar
         </button>
 
-        <!-- CADASTRO -->
+        <!-- CRIAR CONTA -->
         <p class="text-center mt-3">
+            <br>
             Ainda não é parceiro?
             <a href="cadastro-clinica.php" class="link">Cadastrar clínica</a>
         </p>
-
     </form>
-
 </div>
 
 </body>

@@ -20,7 +20,6 @@ document.getElementById("cep").addEventListener("blur", function() {
 const steps = document.querySelectorAll(".form-step");
 const nextBtns = document.querySelectorAll(".next-btn");
 const prevBtns = document.querySelectorAll(".prev-btn");
-const progressBar = document.getElementById("progressBar");
 
 let currentStep = 0;
 

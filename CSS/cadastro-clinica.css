@@ -63,28 +63,6 @@ input::placeholder {
     color: rgba(255,255,255,0.7);
 }
 
-/* PROCEDIMENTOS */
-.section-label {
-    margin-top: 15px;
-    font-size: 0.9rem;
-    color: rgba(255,255,255,0.8);
-}
-
-.procedimentos {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 8px;
-}
-
-.procedimentos label {
-    background: rgba(255,255,255,0.15);
-    padding: 5px 10px;
-    border-radius: 10px;
-    font-size: 0.8rem;
-    cursor: pointer;
-}
-
 /* BOTÃO */
 .cadastro-btn {
     background: linear-gradient(135deg, #fbaa1c, #fa7c47);
@@ -148,13 +126,6 @@ input::placeholder {
     border-radius: 10px;
     margin-bottom: 20px;
     overflow: hidden;
-}
-
-.progress-bar {
-    height: 100%;
-    width: 33%;
-    background: linear-gradient(135deg, #fbaa1c, #fa7c47);
-    transition: 0.4s;
 }
 
 /* STEPS */

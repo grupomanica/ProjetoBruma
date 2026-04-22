@@ -1,4 +1,3 @@
-/* ================= RESET ================= */
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
@@ -32,14 +31,37 @@ body {
 }
 
 .btn-outline-bruma {
+    background: #9c15fc;
+    color: white;
+    border-radius: 20px;
+}
+
+.btn-outline-bruma:hover {
+    color: #9c15fc;
+    border: 1px solid #9c15fc;
+}
+
+.btn-cadastro-bruma {
     border: 1px solid #9c15fc;
     color: #9c15fc;
     border-radius: 20px;
 }
 
-.btn-outline-bruma:hover {
+.btn-cadastro-bruma:hover {
     background: #9c15fc;
     color: white;
+}
+
+.link-clinica {
+    font-size: 0.9rem;
+    color: #6c757d;
+    text-decoration: none;
+    transition: 0.3s;
+    white-space: nowrap;
+}
+
+.link-clinica:hover {
+    color: #9c15fc; /* cor da marca */
 }
 
 /* ================= HERO ================= */

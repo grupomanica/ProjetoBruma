@@ -2,6 +2,7 @@ body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
     background: linear-gradient(135deg, #2c0c64, #9c15fc);
+    height: 100vh;
 }
 
 /* BOTÃO VOLTAR */

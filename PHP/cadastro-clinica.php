@@ -33,12 +33,7 @@
             </div>
 
             <h3 class="text-center mb-2">Cadastrar clínica</h3>
-            <p class="text-center subtitle">Atraia novos clientes com a Bruma</p>
-            
-            <!-- PROGRESSO -->
-            <div class="progress-container">
-                <div class="progress-bar" id="progressBar"></div>
-            </div>
+            <hr>
 
             <!-- ETAPA 1 -->
             <div class="form-step active">
@@ -49,8 +44,6 @@
                 </a>
                 </p>
             
-                <h5 class="step-title">Dados da clínica</h5>
-
                 <div class="input-group-custom">
                     <i class="bi bi-building"></i>
                     <input type="text" placeholder="Nome da clínica" required>
@@ -73,8 +66,6 @@
 
             <!-- ETAPA 2 -->
             <div class="form-step">
-                <h5 class="step-title">Localização</h5>
-
                 <div class="input-group-custom">
                     <i class="bi bi-geo-alt"></i>
                     <input type="text" id="cep" placeholder="CEP">
@@ -103,31 +94,6 @@
 
             <!-- ETAPA 3 -->
             <div class="form-step">
-                <h5 class="step-title">Serviços e Acesso</h5>
-
-                <div class="section-label">Procedimentos</div>
-
-                
-                    <label for="procedimentos">
-                    <select name="procedimentos" id="procedimentos">
-                        <option value="botox">Botox</option>
-                        <option value="acido-hialuronico">Preenchimento com Ácido Hialurônico</option>
-                        <option value="bioestimuladores-colageno">Bioestimuladores de Colágeno</option>
-                        <option value="skinbooster">Skinbooster</option>
-                        <option value="fios-sustentacao">Fios de Sustentação</option>
-                        <option value="laser">Tratamento à Laser</option>
-                        <option value="lip">LIP - Luz Intensa Pulsada</option>
-                        <option value="microagulhamento">Microagulhamento</option>
-                        <option value="peeling">Peeling de Fenol</option>
-                    </select>
-                    </label>
-                
-
-                <div class="input-group-custom mt-2">
-                    <i class="bi bi-plus-circle"></i>
-                    <input type="text" placeholder="Outros procedimentos">
-                </div>
-
                 <div class="input-group-custom">
                     <i class="bi bi-currency-dollar"></i>
                     <select>
