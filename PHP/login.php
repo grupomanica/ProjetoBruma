@@ -52,13 +52,6 @@
             <button type="submit" class="btn login-btn w-100">
                 Entrar
             </button>
-
-        <!-- CRIAR CONTA -->
-        <p class="text-center mt-3">
-            <br>
-            Não tem conta? 
-            <a href="../PHP/cadastro.php" class="link">Criar agora</a>
-        </p>
     </form>
 </div>
 
