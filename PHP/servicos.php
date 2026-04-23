@@ -10,7 +10,6 @@
     <!-- Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
-    <link rel="shortcut icon" href="../ASSETS/IMG/favicon/logo-iconeFullSize.png" type="image/x-icon">
     <link rel="stylesheet" href="../CSS/servicos.css">
     <script src="../JS/servicos.js" defer></script>
 
@@ -19,35 +18,26 @@
 
 <body>
 
-<!-- HEADER -->
 <header class="header-bruma">
     <div class="container d-flex justify-content-between align-items-center">
-
-        <a href="agendamento.php"
-        class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
-            <img src="../ASSETS/IMG/logo-horizontal-roxo.png" class="bi me-2" width="150" role="img">
-        </a>
+        <img src="../ASSETS/IMG/logo-horizontal-roxo.png" width="150">
 
         <div class="d-flex align-items-center gap-3">
             <a href="#" class="perfil-link">
                 <i class="bi bi-person-circle"></i> Meu perfil
             </a>
-            <a href="login.php" class="btn btn-outline-dark btn-sm">
-                Sair
-            </a>
+            <a href="login.php" class="btn btn-outline-dark btn-sm">Sair</a>
         </div>
     </div>
 </header>
 
-<!-- FILTROS -->
 <section class="container filtros">
-
     <div class="row g-3">
 
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="filtro-box">
                 <i class="bi bi-stars"></i>
-                <select class="form-select filtro" data-filter="tipo">
+                <select class="form-select filtro" data-filter="nome">
                     <option value="">Serviço</option>
                     <option>Limpeza</option>
                     <option>Botox</option>
@@ -55,7 +45,7 @@
             </div>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="filtro-box">
                 <i class="bi bi-geo-alt"></i>
                 <select class="form-select filtro" data-filter="regiao">
@@ -69,7 +59,7 @@
             </div>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="filtro-box">
                 <i class="bi bi-currency-dollar"></i>
                 <select class="form-select filtro" data-filter="preco">
@@ -83,17 +73,20 @@
         </div>
 
     </div>
-
 </section>
 
-<!-- RESULTADOS -->
 <section class="container">
-
     <div class="result-count" id="resultado-count"></div>
-
-    <div class="row g-3" id="lista-servicos"></div>
-
+    <div class="row g-4" id="lista-servicos"></div>
 </section>
+
+<form id="form-agendamento" action="agendamento.php" method="POST" style="display: none;">
+    <input type="hidden" name="servico" id="input-servico">
+    <input type="hidden" name="clinica" id="input-clinica">
+    <input type="hidden" name="valor" id="input-valor">
+    <input type="hidden" name="data" id="input-data">
+    <input type="hidden" name="hora" id="input-hora">
+</form>
 
 </body>
 </html>

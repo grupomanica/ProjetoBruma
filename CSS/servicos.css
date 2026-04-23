@@ -7,12 +7,13 @@ body {
 /* HEADER */
 .header-bruma {
     background: white;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
 }
 
 .perfil-link {
     text-decoration: none;
     color: #2c0c64;
-    font-weight: 500;
 }
 
 /* FILTROS */
@@ -24,21 +25,14 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-
     background: white;
     padding: 10px;
     border-radius: 12px;
-
     border: 1px solid #eee;
 }
 
 .filtro-box i {
     color: #9c15fc;
-}
-
-.form-select {
-    border: none;
-    box-shadow: none;
 }
 
 /* RESULTADO */
@@ -50,25 +44,20 @@ body {
 /* CARD */
 .servico-card {
     background: white;
-    border-radius: 15px;
-    padding: 15px;
+    border-radius: 16px;
+    padding: 18px;
     border: 1px solid #eee;
     transition: 0.3s;
 }
 
 .servico-card:hover {
-    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
 }
 
-/* INFO */
-.servico-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
+/* HEADER CARD */
 .servico-nome {
     font-weight: 600;
+    font-size: 1.1rem;
 }
 
 .clinica {
@@ -76,18 +65,71 @@ body {
     color: #777;
 }
 
-/* TAGS */
-.tags {
-    display: flex;
-    gap: 10px;
-    font-size: 0.8rem;
+/* DESCRIÇÃO */
+.descricao {
+    font-size: 0.85rem;
+    color: #555;
     margin: 10px 0;
 }
 
+/* TAG */
 .tag {
     background: #f1ebff;
     padding: 4px 10px;
     border-radius: 10px;
+    font-size: 0.75rem;
+}
+
+/* HORÁRIOS SCROLL */
+.horarios-scroll {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+}
+
+.horarios-scroll::-webkit-scrollbar {
+    height: 4px;
+}
+
+.horarios-scroll::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+
+.hora {
+    min-width: 60px;
+    text-align: center;
+    font-size: 0.75rem;
+    background: #f1ebff;
+    padding: 5px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* VALOR PROFISSIONAL */
+.preco-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.preco-label {
+    font-size: 0.7rem;
+    color: #888;
+}
+
+.preco-valor {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #9c15fc;
+}
+
+/* FOOTER */
+.servico-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
 }
 
 /* BOTÃO */
@@ -96,28 +138,53 @@ body {
     border: none;
     color: white;
     border-radius: 20px;
-    padding: 6px 14px;
-    font-size: 0.9rem;
+    padding: 6px 16px;
 }
 
-/* HORÁRIOS NO CARD */
-.horarios-preview {
+/* AGENDA (dias + horários) */
+.agenda-scroll {
     display: flex;
-    gap: 8px;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+}
+
+.dia-bloco {
+    min-width: 140px;
+    background: #fafafa;
+    border-radius: 10px;
+    padding: 8px;
+    border: 1px solid #eee;
+}
+
+.dia-header {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #9c15fc;
+    margin-bottom: 6px;
+}
+
+.horarios-linha {
+    display: flex;
     flex-wrap: wrap;
-    margin: 10px 0;
+    gap: 5px;
 }
 
 .hora {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     background: #f1ebff;
-    color: #2c0c64;
-    padding: 4px 8px;
-    border-radius: 8px;
+    padding: 3px 6px;
+    border-radius: 6px;
+    cursor: pointer;
     transition: 0.2s;
+    cursor: pointer;
 }
 
 .hora:hover {
     background: #9c15fc;
     color: white;
+}
+
+.hora:active {
+    transform: scale(0.95);
 }
