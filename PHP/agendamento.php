@@ -33,7 +33,7 @@ $qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" . 
 
 <header class="header-bruma">
     <div class="container d-flex justify-content-between align-items-center">
-        <img src="../ASSETS/IMG/logo-horizontal.png" width="90">
+        <a href="painel.php"><img src="../ASSETS/IMG/logo-horizontal.png" width="90"></a>
         <a href="servicos.php" class="btn btn-outline-dark btn-sm">Voltar</a>
     </div>
 </header>
