@@ -27,9 +27,11 @@
 
     <form class="login-form" action="" method="POST">
         <!-- LOGO -->
-        <div class="text-center mb-4">
-             <img src="../ASSETS/IMG/logo-cNomeFullSize.png" width="140">
-        </div>
+        <a href="painel-clinica.php">
+            <div class="text-center mb-4">
+                <img src="../ASSETS/IMG/logo-cNomeFullSize.png" width="140">
+            </div>
+        </a>
 
         <h3 class="text-center mb-3">Área da clínica</h3>
         <p class="text-center subtitle">

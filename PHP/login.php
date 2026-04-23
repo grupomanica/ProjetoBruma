@@ -27,7 +27,7 @@
         <form class="login-form" action="autenticar.php" method="POST">
             <!-- LOGO -->
             <div class="text-center mb-4">
-                <img src="../ASSETS/IMG/logo-cNomeFullSize.png" width="140">
+                <a href="painel.php"><img src="../ASSETS/IMG/logo-cNomeFullSize.png" width="140"></a>
             </div>
 
             <h3 class="text-center mb-3">Bem-vindo de volta</h3>
