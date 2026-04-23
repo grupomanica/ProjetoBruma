@@ -1,7 +1,6 @@
 body {
-    background: #f5f6fa;
     font-family: 'Segoe UI', sans-serif;
-    color: #2c0c64;
+    background: #f5f6fa;
 }
 
 /* HEADER */
@@ -13,45 +12,34 @@ body {
 
 /* CARD */
 .agendamento-card {
+    max-width: 600px;
+    margin: auto;
     padding: 30px;
-    border-radius: 20px;
-    border: none;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    border-radius: 15px;
+    border: 1px solid #eee;
 }
 
 /* STEPS */
 .steps-bar {
     display: flex;
     justify-content: space-between;
-    position: relative;
 }
 
 .step {
     flex: 1;
     text-align: center;
     padding: 10px;
-    font-weight: 500;
+    border-bottom: 3px solid #ddd;
     color: #999;
-    position: relative;
 }
 
 .step.active {
+    border-color: #9c15fc;
     color: #9c15fc;
+    font-weight: bold;
 }
 
-/* linha */
-.steps-bar::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 10%;
-    width: 80%;
-    height: 2px;
-    background: #ddd;
-    z-index: 0;
-}
-
-/* CONTEÚDO */
+/* CONTENT */
 .step-content {
     display: none;
 }
@@ -61,28 +49,41 @@ body {
 }
 
 /* RESUMO */
-.resumo-item {
-    background: #fafafa;
-    padding: 10px;
+.resumo-box {
+    background: #f9f7ff;
+    padding: 15px;
     border-radius: 10px;
-    margin-bottom: 10px;
 }
 
-.destaque {
-    background: #f1ebff;
+.valor {
+    color: #9c15fc;
+    font-weight: bold;
+    font-size: 1.2rem;
 }
 
 /* BOTÕES */
 .next-btn {
+    background: linear-gradient(135deg, #fbaa1c, #fa7c47);
+    border: none;
+    color: white;
+}
+
+.confirmar-btn {
     background: #9c15fc;
     color: white;
     border: none;
 }
 
-.confirmar-btn {
-    background: linear-gradient(135deg, #fbaa1c, #fa7c47);
-    color: white;
-    border: none;
-    padding: 12px 30px;
-    border-radius: 25px;
+/* PIX */
+.pix-code {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.pix-code input {
+    flex: 1;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 8px;
 }

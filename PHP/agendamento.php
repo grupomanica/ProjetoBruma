@@ -1,10 +1,17 @@
 <?php
-// Recebendo dados via POST (vindos da tela de serviços)
 $servico = $_POST['servico'] ?? 'Limpeza de Pele';
 $clinica = $_POST['clinica'] ?? 'Bella Estética';
-$bairro = $_POST['bairro'] ?? 'Moema';
+$endereco = $_POST['endereco'] ?? 'Rua Exemplo, 123 - Moema - São Paulo';
 $valor = $_POST['valor'] ?? '120';
+$data = $_POST['data'] ?? '06/04/2026';
 $hora = $_POST['hora'] ?? '10:00';
+
+$pix = "11999999999";
+
+// payload fake
+$payload = "BRUMA|$clinica|R$$valor|$data|$hora|$pix";
+
+$qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" . urlencode($payload);
 ?>
 
 <!DOCTYPE html>
@@ -19,119 +26,145 @@ $hora = $_POST['hora'] ?? '10:00';
 <link rel="stylesheet" href="../CSS/agendamento.css">
 <script src="../JS/agendamento.js" defer></script>
 
-<title>Revisão do Agendamento | Bruma</title>
+<title>Agendamento | Bruma</title>
 </head>
 
 <body>
 
-<!-- HEADER -->
 <header class="header-bruma">
     <div class="container d-flex justify-content-between align-items-center">
-        <img src="../Assets/logo.png" width="110">
+        <img src="../ASSETS/IMG/logo-horizontal.png" width="90">
         <a href="servicos.php" class="btn btn-outline-dark btn-sm">Voltar</a>
     </div>
 </header>
 
 <section class="container mt-5">
 
-<!-- STEPPER -->
-<div class="steps-bar mb-5">
-    <div class="step active" id="step-1">Consulta</div>
-    <div class="step" id="step-2">Seus dados</div>
-    <div class="step" id="step-3">Confirmação</div>
-</div>
+    <!-- STEPS -->
+    <div class="steps-bar mb-4">
+        <div class="step active" id="step-1">Consulta</div>
+        <div class="step" id="step-2">Seus dados</div>
+        <div class="step" id="step-3">Confirmação</div>
+        <div class="step" id="step-4">Pagamento</div>
+    </div>
 
-<div class="card agendamento-card">
+    <div class="card agendamento-card">
 
-<!-- ETAPA 1 -->
-<div class="step-content active" id="content-1">
+        <!-- ETAPA 1 -->
+        <div class="step-content active" id="content-1">
 
-<h4 class="mb-4">Revise sua consulta</h4>
+            <h4>Revise sua consulta</h4>
 
-<div class="resumo-item">
-    <strong>Serviço:</strong> <?= $servico ?>
-</div>
+            <div class="resumo-box">
+                <p><strong>Serviço:</strong> <?= $servico ?></p>
+                <p><strong>Clínica:</strong> <?= $clinica ?></p>
+                <p><strong>Endereço:</strong> <?= $endereco ?></p>
+                <p><strong>Data:</strong> <?= $data ?></p>
+                <p><strong>Horário:</strong> <?= $hora ?></p>
+                <p class="valor">R$ <?= $valor ?></p>
+            </div>
 
-<div class="resumo-item">
-    <strong>Clínica:</strong> <?= $clinica ?>
-</div>
+            <div class="text-end mt-3">
+                <button class="btn next-btn" onclick="nextStep()">Continuar</button>
+            </div>
 
-<div class="resumo-item">
-    <strong>Bairro:</strong> <?= $bairro ?>
-</div>
+        </div>
 
-<div class="resumo-item">
-    <strong>Horário:</strong> <?= $hora ?>
-</div>
+        <!-- ETAPA 2 -->
+        <div class="step-content" id="content-2">
 
-<div class="resumo-item destaque">
-    <strong>Valor:</strong> R$ <?= $valor ?>
-</div>
+            <h4>Seus dados</h4>
 
-<div class="text-end mt-4">
-    <button class="btn next-btn" onclick="nextStep()">Continuar</button>
-</div>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="name">Nome:</label>
+                    <input type="text" class="form-control" required>
+                </div>
 
-</div>
+                <div class="col-md-6">
+                    <label for="sobrenome">Sobrenome:</label>
+                    <input type="text" class="form-control" required>
+                </div>
 
-<!-- ETAPA 2 -->
-<div class="step-content" id="content-2">
+                <div class="col-md-6">
+                    <label for="dataNascimento">Data de Nascimento</label>
+                    <input type="date" class="form-control" id="dataNascimento" required>
+                </div>
 
-<h4 class="mb-4">Seus dados</h4>
+                <div class="col-md-6">
+                    <label for="telefone">Telefone:</label>
+                    <input type="tel" class="form-control" id="telefone" placeholder="(00) 00000-0000" required>
+                </div>
+            </div>
 
-<div class="row g-3">
+            <div class="form-check mt-3">
+                <input class="form-check-input" type="checkbox" id="idade">
+                <label class="form-check-label">Confirmo que sou maior de 18 anos</label>
+            </div>
 
-<div class="col-md-6">
-<input type="text" class="form-control" placeholder="Nome completo">
-</div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="alergia">
+                <label class="form-check-label">Afirmo que não possuo alergias impeditivas</label>
+            </div>
 
-<div class="col-md-6">
-<input type="email" class="form-control" placeholder="E-mail">
-</div>
+            <div class="d-flex justify-content-between mt-4">
+                <button class="btn btn-outline-secondary" onclick="prevStep()">Voltar</button>
+                <button class="btn next-btn" onclick="validarEtapa2()">Continuar</button>
+            </div>
 
-<div class="col-md-6">
-<input type="tel" class="form-control" placeholder="Telefone / WhatsApp">
-</div>
+        </div>
 
-<div class="col-md-6">
-<input type="date" class="form-control">
-</div>
+        <!-- ETAPA 3 -->
+        <div class="step-content" id="content-3">
 
-</div>
+            <h4>Confirmação</h4>
 
-<div class="d-flex justify-content-between mt-4">
-<button class="btn btn-outline-secondary" onclick="prevStep()">Voltar</button>
-<button class="btn next-btn" onclick="nextStep()">Continuar</button>
-</div>
+            <p>Seu agendamento será enviado para a clínica <strong><?= $clinica ?></strong>.</p>
 
-</div>
+            <div class="alert alert-warning">
+                Realize o pagamento para garantir sua vaga.
+            </div>
 
-<!-- ETAPA 3 -->
-<div class="step-content" id="content-3">
+            <div class="d-flex justify-content-between">
+                <button class="btn btn-outline-secondary" onclick="prevStep()">Voltar</button>
+                <button class="btn next-btn" onclick="nextStep()">Ir para pagamento</button>
+            </div>
 
-<h4 class="mb-4">Confirmação</h4>
+        </div>
 
-<p>
-Seu agendamento será enviado para a clínica <strong><?= $clinica ?></strong>.
-</p>
+        <!-- ETAPA 4 -->
+        <div class="step-content" id="content-4">
+            <div class="d-flex justify-content-between mt-4">
+                <button class="btn btn-outline-secondary" onclick="prevStep()">Voltar</button>
+            </div>
 
-<div class="alert alert-warning">
-A clínica entrará em contato via WhatsApp para confirmar o pagamento.
-</div>
+            <h4 class="text-center">Pagamento via PIX</h4>
 
-<div class="alert alert-info">
-Status inicial: <strong>Pendente</strong>
-</div>
+            <div class="text-center resumo-box mb-3">
+                <strong><?= $clinica ?></strong><br>
+                <?= $servico ?><br>
+                <?= $data ?> às <?= $hora ?><br>
+                <span class="valor">R$ <?= $valor ?></span>
+            </div>
 
-<div class="text-center mt-4">
-<button class="btn confirmar-btn">
-Finalizar agendamento
-</button>
-</div>
+            <div class="text-center">
+                <img src="<?= $qrCodeUrl ?>" alt="QR Code PIX">
+            </div>
 
-</div>
+            <p class="text-center small mt-2">Escaneie com seu banco</p>
 
-</div>
+            <div class="pix-code">
+                <input type="text" id="pixInput" value="<?= $payload ?>" readonly>
+                <button onclick="copiarPix()">Copiar</button>
+            </div>
+
+            <div class="text-center mt-4">
+                <button class="btn confirmar-btn">Já paguei</button>
+            </div>
+
+        </div>
+
+    </div>
 
 </section>
 
