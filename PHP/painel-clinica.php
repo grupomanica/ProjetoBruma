@@ -8,6 +8,8 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
 <link rel="stylesheet" href="../CSS/painel-clinica.css">
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../JS/painel-clinica.js" defer></script>
 
 <title>Bruma | Painel da Clínica</title>
@@ -96,7 +98,9 @@
 
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h3>Serviços</h3>
-                <button class="btn btn-primary">+ Novo Serviço</button>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalServico">
+                    + Novo Serviço
+                </button>
             </div>
 
             <div class="alert alert-warning">
@@ -172,6 +176,52 @@
 
     </div>
 
+</div>
+
+<!-- MODAL NOVO SERVIÇO -->
+<div class="modal fade" id="modalServico" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <form action="salvar_servico.php" method="POST">
+
+        <div class="modal-header">
+          <h5 class="modal-title">Novo Serviço</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+
+          <label class="form-label">Nome do serviço</label>
+          <input type="text" name="nome" class="form-control mb-2" required>
+
+          <label class="form-label">Descrição</label>
+          <textarea name="descricao" class="form-control mb-2" required></textarea>
+
+          <label class="form-label">Quantidade de sessões</label>
+          <input type="number" name="sessoes" class="form-control mb-2" min="1" required>
+
+          <label class="form-label">Valor (R$)</label>
+          <input type="number" name="valor" class="form-control mb-2" step="0.01" required>
+
+          <label class="form-label">Duração (minutos)</label>
+          <input type="number" name="duracao" class="form-control mb-2" required>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-success">
+            Salvar Serviço
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
 </div>
 
 </body>
