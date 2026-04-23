@@ -18,7 +18,9 @@
 <!-- SIDEBAR -->
 <div class="sidebar">
 
-    <img src="../ASSETS/IMG/logo-cNomeFullSize.png">
+    <a href="servicos.php">
+        <img src="../ASSETS/IMG/logo-cNomeFullSize.png">
+    </a>
 
     <a href="#" class="menu-item active" data-page="dashboard">
         <i class="bi bi-house"></i> Início

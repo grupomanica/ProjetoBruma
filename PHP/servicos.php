@@ -23,7 +23,8 @@
 <header class="header-bruma">
     <div class="container d-flex justify-content-between align-items-center">
 
-        <a href="../index.html" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
+        <a href="agendamento.php"
+        class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
             <img src="../ASSETS/IMG/logo-horizontal-roxo.png" class="bi me-2" width="150" role="img">
         </a>
 
