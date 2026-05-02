@@ -75,9 +75,8 @@ try {
     // =========================
     $id_clinica = $pdo->lastInsertId();
 
-    $_SESSION['clinica_id'] = $id_clinica;
-    $_SESSION['clinica_nome'] = $nome;
-
+   header("Location: login-clinica.php");
+exit;
     session_regenerate_id(true);
 
     // =========================
