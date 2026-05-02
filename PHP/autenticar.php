@@ -1,33 +1,33 @@
 <?php
-session_start();
-include("conexao.php");
+require_once("conexao.php");
 
-$email = $_POST['email'];
-$senha = $_POST['senha'];
+try {
+    $pdo = conectar();
 
-// evita SQL injection
-$email = $conn->real_escape_string($email);
+    $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+    $senha = $_POST['senha'];
 
-$sql = "SELECT * FROM usuarios WHERE email = '$email'";
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-    $usuario = $result->fetch_assoc();
-
-    // verifica senha criptografada
-    if (password_verify($senha, $usuario['senha'])) {
-
-        $_SESSION['usuario_id'] = $usuario['id'];
-        $_SESSION['usuario_nome'] = $usuario['nome'];
-
-        header("Location: dashboard.php");
-        exit();
-
-    } else {
-        echo "Senha incorreta!";
+    if (!$email || !$senha) {
+        throw new Exception("Dados inválidos");
     }
 
-} else {
-    echo "Usuário não encontrado!";
+    $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE email = ?");
+    $stmt->execute([$email]);
+
+    $user = $stmt->fetch();
+
+    if (!$user || !password_verify($senha, $user['senha'])) {
+        throw new Exception("Login inválido");
+    }
+
+    session_regenerate_id(true);
+
+    $_SESSION['usuario_id'] = $user['id'];
+    $_SESSION['usuario_nome'] = $user['nome'];
+
+    header("Location:servicos.php");
+    exit;
+
+} catch (Exception $e) {
+    echo $e->getMessage();
 }
-?>
