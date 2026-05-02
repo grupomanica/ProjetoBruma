@@ -1,4 +1,7 @@
 <?php
+session_start();
+$id_clinica = $_SESSION['clinica_id'];
+
 // SANITIZAÇÃO
 $servico = htmlspecialchars($_POST['servico'] ?? '');
 $clinica = htmlspecialchars($_POST['clinica'] ?? '');
