@@ -1,36 +1,55 @@
-create database sistemaBruma;
-use sistemaBruma;
+CREATE DATABASE sistemabruma;
+USE sistemabruma;
 
-create table usuarios
-    (
-        codigo int primary key auto_increment,
-        nome char(30) not null,
-        email char(50) not null,
-        senha char(60) not null
-    );
-
-select * from usuarios;
-DESCRIBE usuarios;
-
-
-CREATE TABLE clinicas (
-    codigo INT PRIMARY KEY AUTO_INCREMENT ,
-    nome VARCHAR(100) NOT NULL,
-    cnpj VARCHAR(18) NOT NULL,
-    cep VARCHAR(10) NOT NULL,
-    cidade VARCHAR(50) NOT NULL,
-    bairro VARCHAR(50) NOT NULL,
-    endereco VARCHAR(100) NOT NULL
+-- USUÁRIOS
+CREATE TABLE usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100),
+    email VARCHAR(100) UNIQUE,
+    senha VARCHAR(255),
+    telefone VARCHAR(20)
 );
 
-  
+-- CLÍNICAS
+CREATE TABLE clinicas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100),
+    email VARCHAR(100) UNIQUE,
+    senha VARCHAR(255),
+    telefone VARCHAR(20),
+    endereco VARCHAR(255),
+    cnpj VARCHAR(20),
+    cidade VARCHAR(100),
+    bairro VARCHAR(100),
+    faixa_preco VARCHAR(50)
+);
+
+-- SERVIÇOS
+CREATE TABLE servicos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_clinica INT,
+    FOREIGN KEY (id_clinica) REFERENCES clinicas(id),
+    nome VARCHAR(100),
+    descricao TEXT,
+    valor DECIMAL(10,2),
+    duracao INT
+);
+
+-- AGENDAMENTOS
 CREATE TABLE agendamentos (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    data_agendamento DATETIME DEFAULT CURRENT_TIMESTAMP
+    id_usuario INT,
+    id_servico INT,
+    data DATE,
+    hora TIME,
+    nome_cliente VARCHAR(100),
+    telefone VARCHAR(20),
+    status ENUM('pendente', 'pago', 'confirmado') DEFAULT 'pendente',
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
+    FOREIGN KEY (id_servico) REFERENCES servicos(id)
 );
-create table servicos
-( 
-botox char(30) not null
-);
-drop database sistemaBruma;
-drop table agendamento;
+
+select*from usuarios;
+
+DROP database sistemabruma
