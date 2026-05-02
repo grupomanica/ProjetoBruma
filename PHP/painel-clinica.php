@@ -1,3 +1,31 @@
+<?php
+session_start();
+require_once("conexao.php");
+
+if (!isset($_SESSION['clinica_id'])) {
+    header("Location: login-clinica.php");
+    exit;
+}
+
+try {
+    $pdo = conectar();
+
+    // 🔎 buscar serviços da clínica
+    $stmt = $pdo->prepare("
+        SELECT s.*, t.nome AS tipo
+        FROM servicos s
+        LEFT JOIN tipos_servicos t ON s.id_tipo = t.id
+        WHERE s.id_clinica = ?
+    ");
+
+    $stmt->execute([$_SESSION['clinica_id']]);
+    $servicos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+} catch (Exception $e) {
+    die("Erro: " . $e->getMessage());
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -55,7 +83,7 @@
     <div class="topbar">
         <div class="user">
             <img src="https://i.pravatar.cc/100">
-            <span>Clínica (sem BD)</span>
+            <span><?= htmlspecialchars($_SESSION['clinica_nome']) ?></span>
         </div>
     </div>
 
@@ -79,7 +107,7 @@
                 <div class="col-md-4">
                     <div class="card-mini">
                         <span>Serviços ativos</span>
-                        <strong>--</strong>
+                        <strong><?= count($servicos) ?></strong>
                     </div>
                 </div>
 
@@ -103,9 +131,39 @@
                 </button>
             </div>
 
-            <div class="alert alert-warning">
-                Nenhum serviço cadastrado (sem conexão com banco)
-            </div>
+            <?php if (count($servicos) > 0): ?>
+
+                <div class="row">
+                    <?php foreach ($servicos as $servico): ?>
+                        <div class="col-md-4 mb-3">
+                            <div class="card p-3 shadow-sm">
+
+                                <h5><?= htmlspecialchars($servico['nome']) ?></h5>
+
+                                <p class="text-muted small">
+                                    <?= htmlspecialchars($servico['descricao']) ?>
+                                </p>
+
+                                <p><strong>Tipo:</strong> <?= $servico['tipo'] ?? 'Não definido' ?></p>
+
+                                <p><strong>Duração:</strong> <?= $servico['duracao'] ?> min</p>
+
+                                <p class="text-success fw-bold">
+                                    R$ <?= number_format($servico['valor'], 2, ',', '.') ?>
+                                </p>
+
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
+            <?php else: ?>
+
+                <div class="alert alert-warning">
+                    Nenhum serviço cadastrado ainda.
+                </div>
+
+            <?php endif; ?>
 
         </div>
 
@@ -115,7 +173,7 @@
             <h3>Horários Disponíveis</h3>
 
             <div class="alert alert-info">
-                Configure os horários da clínica (dados não conectados)
+                Configure os horários da clínica
             </div>
 
         </div>
@@ -136,24 +194,10 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td colspan="4">Nenhum agendamento (sem BD)</td>
+                        <td colspan="4">Nenhum agendamento ainda</td>
                     </tr>
                 </tbody>
             </table>
-
-        </div>
-
-        <!-- PROFISSIONAIS -->
-        <div class="page d-none" id="profissionais">
-
-            <div class="d-flex justify-content-between mb-3">
-                <h3>Profissionais</h3>
-                <button class="btn btn-primary">+ Novo</button>
-            </div>
-
-            <div class="alert alert-secondary">
-                Nenhum profissional cadastrado
-            </div>
 
         </div>
 
@@ -178,12 +222,12 @@
 
 </div>
 
-<!-- MODAL NOVO SERVIÇO -->
+<!-- MODAL -->
 <div class="modal fade" id="modalServico" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
 
-      <form action="salvar_servico.php" method="POST">
+      <form action="salvar_servico-clinica.php" method="POST">
 
         <div class="modal-header">
           <h5 class="modal-title">Novo Serviço</h5>
@@ -192,30 +236,16 @@
 
         <div class="modal-body">
 
-          <label class="form-label">Nome do serviço</label>
-          <input type="text" name="nome" class="form-control mb-2" required>
-
-          <label class="form-label">Descrição</label>
-          <textarea name="descricao" class="form-control mb-2" required></textarea>
-
-          <label class="form-label">Quantidade de sessões</label>
+          <input type="text" name="nome" class="form-control mb-2" placeholder="Nome" required>
+          <textarea name="descricao" class="form-control mb-2" placeholder="Descrição" required></textarea>
           <input type="number" name="sessoes" class="form-control mb-2" min="1" required>
-
-          <label class="form-label">Valor (R$)</label>
           <input type="number" name="valor" class="form-control mb-2" step="0.01" required>
-
-          <label class="form-label">Duração (minutos)</label>
           <input type="number" name="duracao" class="form-control mb-2" required>
 
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-            Cancelar
-          </button>
-          <button type="submit" class="btn btn-success">
-            Salvar Serviço
-          </button>
+          <button type="submit" class="btn btn-success">Salvar</button>
         </div>
 
       </form>
