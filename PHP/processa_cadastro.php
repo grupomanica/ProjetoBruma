@@ -1,38 +1,45 @@
 <?php
-include("conexao.php");
+require_once("conexao.php");
 
-$nome = $_POST['nome'];
-$email = $_POST['email'];
-$senha = $_POST['senha'];
-$confirmar = $_POST['confirmar_senha'];
+try {
+    $pdo = conectar();
 
-// validação simples
-if ($senha !== $confirmar) {
-    die("As senhas não coincidem!");
-}
+    // 🔒 Sanitização e validação
+    $nome = htmlspecialchars($_POST['nome'] ?? '');
+    $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+    $senha = $_POST['senha'] ?? '';
+    $confirmar = $_POST['confirmar_senha'] ?? '';
 
-// criptografar senha
-$senhaHash = password_hash($senha, PASSWORD_DEFAULT);
+    if (!$nome || !$email || !$senha) {
+        throw new Exception("Preencha todos os campos corretamente");
+    }
 
-// evitar SQL injection
-$nome = $conn->real_escape_string($nome);
-$email = $conn->real_escape_string($email);
+    if ($senha !== $confirmar) {
+        throw new Exception("As senhas não coincidem");
+    }
 
-// verificar se já existe
-$sql_check = "SELECT id FROM usuarios WHERE email = '$email'";
-$result = $conn->query($sql_check);
+    // 🔐 Criptografia
+    $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
 
-if ($result->num_rows > 0) {
-    die("Este e-mail já está cadastrado!");
-}
+    // 🔍 Verificar duplicado
+    $sql = $pdo->prepare("SELECT id FROM usuarios WHERE email = ?");
+    $sql->execute([$email]);
 
-// inserir no banco
-$sql = "INSERT INTO usuarios (nome, email, senha) 
-        VALUES ('$nome', '$email', '$senhaHash')";
+    if ($sql->rowCount() > 0) {
+        throw new Exception("Email já cadastrado");
+    }
 
-if ($conn->query($sql) === TRUE) {
+    // 💾 Inserir
+    $sql = $pdo->prepare("
+        INSERT INTO usuarios (nome, email, senha) 
+        VALUES (?, ?, ?)
+    ");
+
+    $sql->execute([$nome, $email, $senhaHash]);
+
     header("Location: login.php");
-} else {
-    echo "Erro ao cadastrar: " . $conn->error;
+    exit;
+
+} catch (Exception $e) {
+    echo $e->getMessage();
 }
-?>

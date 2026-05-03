@@ -46,6 +46,10 @@
         <i class="bi bi-gear"></i> Perfil
     </a>
 
+    <a href="login-clinica.php">
+        <i class="bi bi-box-arrow-right"></i> Sair
+    </a>
+
 </div>
 
 <!-- MAIN -->
@@ -183,7 +187,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
 
-      <form action="salvar_servico.php" method="POST">
+      <form action="salvar-servico.php" method="POST">
 
         <div class="modal-header">
           <h5 class="modal-title">Novo Serviço</h5>

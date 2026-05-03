@@ -1,19 +1,23 @@
 <?php
-$local_server = "localhost";
-$usuario_server = "root";
-$senha_server = "";
-$banco_de_dados = "sistemabruma";
+function conectar() {
+    $host = "localhost";
+    $dbname = "sistemabruma";
+    $user = "root";
+    $pass = "Sebrae@2026";
 
-try{
-    $pdo= new PDO("mysql:host=$local_server;dbname=$banco_de_dados",
-    $usuario_server,$senha_server);
-    $pdo->exec("SET CHARACTER SET utf8");
-    return $pdo;
-}
-catch(Exception $erro){
-    echo "ATENÇÃO - ERRO NA CONEXÃO: " . $erro->getMessage();
-    exit;
-}
+    try {
+        $pdo = new PDO(
+            "mysql:host=$host;dbname=$dbname;charset=utf8mb4",
+            $user,
+            $pass
+        );
 
-$tabela = "usuario";
-?>
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+
+        return $pdo;
+
+    } catch (PDOException $e) {
+        die("Erro na conexão com o banco.");
+    }
+}
