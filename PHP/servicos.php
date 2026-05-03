@@ -41,6 +41,24 @@
                     <option value="">Serviço</option>
                     <option>Limpeza</option>
                     <option>Botox</option>
+                    <option>Peeling Químico</option>
+                    <option>Microagulhamento</option>
+                    <option>Radiofrequência facial</option>
+                    <option>Skinbooster</option>
+                    <option>Harmonização facial</option>
+                    <option>Preenchimento Labial</option>
+                    <option>Bichectomia</option>
+                    <option>Bioestimuladores de colágeno</option>
+                    <option>Fios de sustentação</option>
+                    <option>Lipo enzimática</option>
+                    <option>Drenagem linfática</option>
+                    <option>Massagem modeladora</option>
+                    <option>Criolipólise</option>
+                    <option>Carboxiterapia</option>
+                    <option>Tratamento para celulite</option>
+                    <option>Detox corporal</option>
+
+
                 </select>
             </div>
         </div>

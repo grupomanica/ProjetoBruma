@@ -25,7 +25,7 @@
 
 <div class="login-container">
 
-    <form class="login-form" action="" method="POST">
+    <form class="login-form" action="autenticar-clinica" method="POST">
         <!-- LOGO -->
         <a href="painel-clinica.php">
             <div class="text-center mb-4">
