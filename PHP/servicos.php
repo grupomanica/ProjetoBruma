@@ -23,7 +23,7 @@
         <img src="../ASSETS/IMG/logo-horizontal-roxo.png" width="150">
 
         <div class="d-flex align-items-center gap-3">
-            <a href="#" class="perfil-link">
+            <a href="painel.php" class="perfil-link">
                 <i class="bi bi-person-circle"></i> Meu perfil
             </a>
             <a href="login.php" class="btn btn-outline-dark btn-sm">Sair</a>

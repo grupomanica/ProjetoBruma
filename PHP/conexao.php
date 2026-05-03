@@ -21,3 +21,6 @@ function conectar() {
         die("Erro na conexão com o banco.");
     }
 }
+
+$tabela = "usuario";
+?>
