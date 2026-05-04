@@ -28,17 +28,47 @@ CREATE TABLE clinicas (
     senha VARCHAR(255)
 );
 
-ALTER TABLE clinicas 
-ADD senha VARCHAR(255);
   
 CREATE TABLE agendamentos (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    data_agendamento DATETIME DEFAULT CURRENT_TIMESTAMP
+    usuario_id INT NOT NULL,
+    clinica_id INT NOT NULL,
+    servico_id INT NOT NULL,
+    horario_id INT NOT NULL,
+
+    valor DECIMAL(10,2),
+    status_pagamento ENUM('pendente','pago') DEFAULT 'pendente',
+    status_agendamento ENUM('pendente','confirmado','concluido','cancelado') DEFAULT 'pendente',
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+    FOREIGN KEY (clinica_id) REFERENCES clinicas(id),
+    FOREIGN KEY (servico_id) REFERENCES servicos(id),
+    FOREIGN KEY (horario_id) REFERENCES horarios_disponiveis(id)
 );
 
 CREATE TABLE servicos (
-	id INT AUTO_INCREMENT PRIMARY KEY,
-	botox char(30) not null
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    clinica_id INT NOT NULL,
+    tipo_procedimento VARCHAR(100) NOT NULL,
+    nome VARCHAR(100) NOT NULL,
+    descricao TEXT,
+    sessoes INT,
+    valor DECIMAL(10,2),
+    duracao INT,
+
+    FOREIGN KEY (clinica_id) REFERENCES clinicas(id)
+);
+
+CREATE TABLE horarios_disponiveis (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    servico_id INT NOT NULL,
+    data_disponivel DATE NOT NULL,
+    horario TIME NOT NULL,
+    status ENUM('livre','ocupado') DEFAULT 'livre',
+
+    FOREIGN KEY (servico_id) REFERENCES servicos(id)
 );
 
 SELECT * FROM usuarios;
@@ -46,5 +76,8 @@ SELECT * FROM clinicas;
 SELECT senha FROM clinicas;
 
 DROP DATABASE sistemaBruma;
-DROP TABLE agendamento;
+DROP TABLE agendamentos;
 DROP TABLE clinicas;
+DROP TABLE servicos;
+
+DESCRIBE servicos;
