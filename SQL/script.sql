@@ -20,32 +20,11 @@ CREATE TABLE clinicas (
     cep VARCHAR(10) NOT NULL,
     cidade VARCHAR(50) NOT NULL,
     bairro VARCHAR(50) NOT NULL,
-    endereco VARCHAR(100) NOT NULL,
     logradouro VARCHAR(255),
 	faixa_preco VARCHAR(50),
     email VARCHAR(100) UNIQUE,
     telefone VARCHAR(20),
     senha VARCHAR(255)
-);
-
-  
-CREATE TABLE agendamentos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario_id INT NOT NULL,
-    clinica_id INT NOT NULL,
-    servico_id INT NOT NULL,
-    horario_id INT NOT NULL,
-
-    valor DECIMAL(10,2),
-    status_pagamento ENUM('pendente','pago') DEFAULT 'pendente',
-    status_agendamento ENUM('pendente','confirmado','concluido','cancelado') DEFAULT 'pendente',
-
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
-    FOREIGN KEY (clinica_id) REFERENCES clinicas(id),
-    FOREIGN KEY (servico_id) REFERENCES servicos(id),
-    FOREIGN KEY (horario_id) REFERENCES horarios_disponiveis(id)
 );
 
 CREATE TABLE servicos (
@@ -70,6 +49,25 @@ CREATE TABLE horarios_disponiveis (
 
     FOREIGN KEY (servico_id) REFERENCES servicos(id)
 );
+  
+CREATE TABLE agendamentos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    clinica_id INT NOT NULL,
+    servico_id INT NOT NULL,
+    horario_id INT NOT NULL,
+
+    valor DECIMAL(10,2),
+    status_pagamento ENUM('pendente','pago') DEFAULT 'pendente',
+    status_agendamento ENUM('pendente','confirmado','concluido','cancelado') DEFAULT 'pendente',
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+    FOREIGN KEY (clinica_id) REFERENCES clinicas(id),
+    FOREIGN KEY (servico_id) REFERENCES servicos(id),
+    FOREIGN KEY (horario_id) REFERENCES horarios_disponiveis(id)
+);
 
 SELECT * FROM usuarios;
 SELECT * FROM clinicas;
@@ -77,7 +75,7 @@ SELECT senha FROM clinicas;
 
 DROP DATABASE sistemaBruma;
 DROP TABLE agendamentos;
-DROP TABLE clinicas;
 DROP TABLE servicos;
+DROP TABLE clinicas;
 
 DESCRIBE servicos;
