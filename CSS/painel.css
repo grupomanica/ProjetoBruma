@@ -80,3 +80,13 @@ body {
     margin-top: 5px;
     color: #9c15fc;
 }
+
+.btn-primary{
+    background-color:#2c0c64;
+    color: white;
+    border: 0cm;
+}
+
+.btn-primary:hover{
+    background-color: #9c15fc;
+}
