@@ -1,4 +1,7 @@
 <?php
+// Incluindo o autoload do DOM PDF
+require_once '../ASSETS/dompdf/autoload.inc.php';
+
 $servico = $_POST['servico'] ?? 'Limpeza de Pele';
 $clinica = $_POST['clinica'] ?? 'Bella Estética';
 $endereco = $_POST['endereco'] ?? 'Rua Exemplo, 123 - Moema - São Paulo';
