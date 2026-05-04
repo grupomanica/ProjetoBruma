@@ -6,14 +6,10 @@
 
     <link rel="shortcut icon" href="../ASSETS/IMG/favicon/logo-iconeFullSize.png" type="image/x-icon">
 
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Ícones -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
     <link rel="stylesheet" href="../CSS/login-clinica.css">
-
     <title>Bruma | Área da Clínica</title>
 </head>
 
@@ -24,9 +20,7 @@
 </a>
 
 <div class="login-container">
-
-    <form class="login-form" action="autenticar-clinica" method="POST">
-        <!-- LOGO -->
+    <form class="login-form" action="autenticar-clinica.php" method="POST">
         <a href="painel-clinica.php">
             <div class="text-center mb-4">
                 <img src="../ASSETS/IMG/logo-cNomeFullSize.png" width="140">
@@ -39,24 +33,22 @@
         </p>
         <hr>
 
-        <!-- EMAIL -->
         <div class="input-group-custom">
             <i class="bi bi-envelope"></i>
-            <input type="email" name="email" placeholder="E-mail da clínica" required>
+            <input type="email" id="email" name="email"
+            placeholder="E-mail da clínica" required>
         </div>
 
-        <!-- SENHA -->
         <div class="input-group-custom">
             <i class="bi bi-lock"></i>
-            <input type="password" name="senha" placeholder="Senha" required>
+            <input type="password" id="senha" name="senha"
+            placeholder="Senha" required>
         </div>
 
-        <!-- BOTÃO -->
         <button type="submit" class="btn login-btn w-100">
             Entrar
         </button>
 
-        <!-- CRIAR CONTA -->
         <p class="text-center mt-3">
             <br>
             Ainda não é parceiro?
