@@ -5,6 +5,7 @@ require_once("conexao.php");
 try {
     $pdo = conectar();
 
+    // Dados do formulário de login
     $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
     $senha = $_POST['senha'];
 
@@ -32,3 +33,4 @@ try {
 } catch (Exception $e) {
     echo $e->getMessage();
 }
+?>
