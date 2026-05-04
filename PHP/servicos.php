@@ -5,6 +5,35 @@ if (!isset($_SESSION['usuario_id'])) {
     header("Location: login.php");
     exit();
 }
+
+require_once("conexao.php");
+
+$pdo = conectar();
+
+try {
+
+    $sql = "
+        SELECT 
+            s.id,
+            s.nome,
+            s.descricao,
+            s.valor,
+            c.nome AS nome_clinica,
+            c.bairro
+        FROM servicos s
+        INNER JOIN clinicas c 
+            ON s.clinica_id = c.id
+        ORDER BY s.id DESC
+    ";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+
+    $servicos = $stmt->fetchAll();
+
+} catch (PDOException $e) {
+    die("Erro ao buscar serviços: " . $e->getMessage());
+}
 ?>
 
 <!DOCTYPE html>
@@ -20,13 +49,13 @@ if (!isset($_SESSION['usuario_id'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
     <link rel="stylesheet" href="../CSS/servicos.css">
-    <script src="../JS/servicos.js" defer></script>
 
     <title>Bruma | Serviços</title>
 </head>
 
 <body>
 
+<!-- HEADER -->
 <header class="header-bruma">
     <div class="container d-flex justify-content-between align-items-center">
         <img src="../ASSETS/IMG/logo-horizontal-roxo.png" width="150">
@@ -35,18 +64,24 @@ if (!isset($_SESSION['usuario_id'])) {
             <a href="painel.php" class="perfil-link">
                 <i class="bi bi-person-circle"></i> Meu perfil
             </a>
-            <a href="login.php" class="btn btn-outline-dark btn-sm">Sair</a>
+
+            <a href="logout.php" class="btn btn-outline-dark btn-sm">
+                Sair
+            </a>
         </div>
     </div>
 </header>
 
-<section class="container filtros">
+<!-- FILTROS -->
+<section class="container filtros mt-4">
     <div class="row g-3">
 
+        <!-- filtro serviço -->
         <div class="col-md-4">
             <div class="filtro-box">
                 <i class="bi bi-stars"></i>
-                <select class="form-select filtro" data-filter="nome">
+
+                <select class="form-select">
                     <option value="">Serviço</option>
                     <option>Limpeza</option>
                     <option>Botox</option>
@@ -66,35 +101,37 @@ if (!isset($_SESSION['usuario_id'])) {
                     <option>Carboxiterapia</option>
                     <option>Tratamento para celulite</option>
                     <option>Detox corporal</option>
-
-
                 </select>
             </div>
         </div>
 
+        <!-- filtro região -->
         <div class="col-md-4">
             <div class="filtro-box">
                 <i class="bi bi-geo-alt"></i>
-                <select class="form-select filtro" data-filter="regiao">
+
+                <select class="form-select">
                     <option value="">Região</option>
-                    <option value="central">Central</option>
-                    <option value="norte">Norte</option>
-                    <option value="sul">Sul</option>
-                    <option value="leste">Leste</option>
-                    <option value="oeste">Oeste</option>
+                    <option>Central</option>
+                    <option>Norte</option>
+                    <option>Sul</option>
+                    <option>Leste</option>
+                    <option>Oeste</option>
                 </select>
             </div>
         </div>
 
+        <!-- filtro preço -->
         <div class="col-md-4">
             <div class="filtro-box">
                 <i class="bi bi-currency-dollar"></i>
-                <select class="form-select filtro" data-filter="preco">
+
+                <select class="form-select">
                     <option value="">Preço</option>
-                    <option value="0-100">Até R$100</option>
-                    <option value="100-200">R$100 - R$200</option>
-                    <option value="200-400">R$200 - R$400</option>
-                    <option value="400+">Acima de R$400</option>
+                    <option>Até R$100</option>
+                    <option>R$100 - R$200</option>
+                    <option>R$200 - R$400</option>
+                    <option>Acima de R$400</option>
                 </select>
             </div>
         </div>
@@ -102,18 +139,90 @@ if (!isset($_SESSION['usuario_id'])) {
     </div>
 </section>
 
-<section class="container">
-    <div class="result-count" id="resultado-count"></div>
-    <div class="row g-4" id="lista-servicos"></div>
-</section>
+<!-- LISTA DE SERVIÇOS -->
+<section class="container mt-5">
 
-<form id="form-agendamento" action="agendamento.php" method="POST" style="display: none;">
-    <input type="hidden" name="servico" id="input-servico">
-    <input type="hidden" name="clinica" id="input-clinica">
-    <input type="hidden" name="valor" id="input-valor">
-    <input type="hidden" name="data" id="input-data">
-    <input type="hidden" name="hora" id="input-hora">
-</form>
+    <h3 class="mb-4">Serviços disponíveis</h3>
+
+    <div class="row g-4">
+
+        <?php if(count($servicos) > 0): ?>
+
+            <?php foreach($servicos as $row): ?>
+
+                <div class="col-md-4">
+                    <div class="card shadow-sm h-100 p-3">
+
+                        <h5>
+                            <?= htmlspecialchars($row['nome']) ?>
+                        </h5>
+
+                        <p class="text-muted mb-1">
+                            <strong>Clínica:</strong>
+                            <?= htmlspecialchars($row['nome_clinica']) ?>
+                        </p>
+
+                        <p>
+                            <?= htmlspecialchars($row['descricao']) ?>
+                        </p>
+
+                        <p>
+                            <strong>Região:</strong>
+                            <?= htmlspecialchars($row['bairro']) ?>
+                        </p>
+
+                        <p class="text-success fw-bold">
+                            A partir de R$
+                            <?= number_format($row['valor'], 2, ',', '.') ?>
+                        </p>
+
+                        <form action="agendamento.php" method="POST">
+                            <input 
+                                type="hidden" 
+                                name="servico_id" 
+                                value="<?= $row['id'] ?>"
+                            >
+
+                            <input 
+                                type="hidden" 
+                                name="servico" 
+                                value="<?= htmlspecialchars($row['nome']) ?>"
+                            >
+
+                            <input 
+                                type="hidden" 
+                                name="clinica" 
+                                value="<?= htmlspecialchars($row['nome_clinica']) ?>"
+                            >
+
+                            <input 
+                                type="hidden" 
+                                name="valor" 
+                                value="<?= $row['valor'] ?>"
+                            >
+
+                            <button class="btn btn-primary w-100">
+                                Agendar
+                            </button>
+                        </form>
+
+                    </div>
+                </div>
+
+            <?php endforeach; ?>
+
+        <?php else: ?>
+
+            <div class="col-12">
+                <div class="alert alert-warning text-center">
+                    Nenhum serviço cadastrado pelas clínicas ainda.
+                </div>
+            </div>
+
+        <?php endif; ?>
+
+    </div>
+</section>
 
 </body>
 </html>
