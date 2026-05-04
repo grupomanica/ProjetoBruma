@@ -1,31 +1,22 @@
 <?php
 session_start();
-require_once("conexao.php");
 
+// Verifica se a clínica está logada
 if (!isset($_SESSION['clinica_id'])) {
     header("Location: login-clinica.php");
-    exit;
+    exit();
 }
 
-try {
-    $pdo = conectar();
+// Dados da sessão
+$nomeClinica = $_SESSION['clinica_nome'];
+$emailClinica = $_SESSION['clinica_email'];
+$telefoneClinica = $_SESSION['clinica_telefone'];
+$cepClinica = $_SESSION['clinica_cep'];
 
-    // 🔎 buscar serviços da clínica
-    $stmt = $pdo->prepare("
-        SELECT s.*, t.nome AS tipo
-        FROM servicos s
-        LEFT JOIN tipos_servicos t ON s.id_tipo = t.id
-        WHERE s.id_clinica = ?
-    ");
 
-    $stmt->execute([$_SESSION['clinica_id']]);
-    $servicos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-} catch (Exception $e) {
-    die("Erro: " . $e->getMessage());
-}
+// Temporário até conectar serviços reais do banco
+$servicos = [];
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -74,7 +65,7 @@ try {
         <i class="bi bi-gear"></i> Perfil
     </a>
 
-    <a href="login-clinica.php">
+    <a href="logout-clinica.php">
         <i class="bi bi-box-arrow-right"></i> Sair
     </a>
 
@@ -87,7 +78,7 @@ try {
     <div class="topbar">
         <div class="user">
             <img src="https://i.pravatar.cc/100">
-            <span><?= htmlspecialchars($_SESSION['clinica_nome']) ?></span>
+            <span><?= htmlspecialchars($nomeClinica) ?></span>
         </div>
     </div>
 
@@ -130,7 +121,12 @@ try {
 
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h3>Serviços</h3>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalServico">
+
+                <button 
+                    class="btn btn-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalServico"
+                >
                     + Novo Serviço
                 </button>
             </div>
@@ -148,9 +144,10 @@ try {
                                     <?= htmlspecialchars($servico['descricao']) ?>
                                 </p>
 
-                                <p><strong>Tipo:</strong> <?= $servico['tipo'] ?? 'Não definido' ?></p>
-
-                                <p><strong>Duração:</strong> <?= $servico['duracao'] ?> min</p>
+                                <p>
+                                    <strong>Duração:</strong>
+                                    <?= $servico['duracao'] ?> min
+                                </p>
 
                                 <p class="text-success fw-bold">
                                     R$ <?= number_format($servico['valor'], 2, ',', '.') ?>
@@ -173,18 +170,15 @@ try {
 
         <!-- HORÁRIOS -->
         <div class="page d-none" id="horarios">
-
             <h3>Horários Disponíveis</h3>
 
             <div class="alert alert-info">
                 Configure os horários da clínica
             </div>
-
         </div>
 
         <!-- AGENDAMENTOS -->
         <div class="page d-none" id="agendamentos">
-
             <h3>Agendamentos</h3>
 
             <table class="table">
@@ -196,66 +190,139 @@ try {
                         <th>Status</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     <tr>
-                        <td colspan="4">Nenhum agendamento ainda</td>
+                        <td colspan="4">
+                            Nenhum agendamento ainda
+                        </td>
                     </tr>
                 </tbody>
             </table>
+        </div>
 
+        <!-- PROFISSIONAIS -->
+        <div class="page d-none" id="profissionais">
+            <h3>Profissionais</h3>
+
+            <div class="alert alert-secondary">
+                Nenhum profissional cadastrado ainda.
+            </div>
         </div>
 
         <!-- PERFIL -->
         <div class="page d-none" id="perfil">
-
             <h3>Dados da Clínica</h3>
-
             <form class="mt-3">
+                <input 
+                    class="form-control mb-2"
+                    name="nome"
+                    placeholder="Nome da clínica"
+                    value="<?= htmlspecialchars($nomeClinica) ?>"
+                >
 
-                <input class="form-control mb-2" placeholder="Nome da clínica">
-                <input class="form-control mb-2" placeholder="Telefone">
-                <input class="form-control mb-2" placeholder="Endereço">
+                <input 
+                    class="form-control mb-2"
+                    name="email"
+                    placeholder="Email"
+                    value="<?= htmlspecialchars($emailClinica) ?>"
+                >
 
-                <button class="btn btn-success">Salvar</button>
+                <input 
+                    class="form-control mb-2"
+                    name="telefone"
+                    placeholder="Telefone"
+                    value="<?= htmlspecialchars($telefoneClinica) ?>"
+                >
+
+                <input 
+                    class="form-control mb-2"
+                    placeholder="CEP"
+                    value="<?= htmlspecialchars($cepClinica) ?>"
+                >
+
+                <button class="btn btn-success">
+                    Salvar
+                </button>
 
             </form>
-
         </div>
 
     </div>
-
 </div>
 
 <!-- MODAL -->
 <div class="modal fade" id="modalServico" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-dialog">
+        <div class="modal-content">
 
-      <form action="salvar_servico.php" method="POST">
+            <form action="salvar_servico.php" method="POST">
 
-        <div class="modal-header">
-          <h5 class="modal-title">Novo Serviço</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <div class="modal-header">
+                    <h5 class="modal-title">Novo Serviço</h5>
+
+                    <button 
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                    ></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <input 
+                        type="text"
+                        name="nome"
+                        class="form-control mb-2"
+                        placeholder="Nome"
+                        required
+                    >
+
+                    <textarea 
+                        name="descricao"
+                        class="form-control mb-2"
+                        placeholder="Descrição"
+                        required
+                    ></textarea>
+
+                    <input 
+                        type="number"
+                        name="sessoes"
+                        class="form-control mb-2"
+                        placeholder="Quantidade de sessões"
+                        min="1"
+                        required
+                    >
+
+                    <input 
+                        type="number"
+                        name="valor"
+                        class="form-control mb-2"
+                        placeholder="Valor"
+                        step="0.01"
+                        required
+                    >
+
+                    <input 
+                        type="number"
+                        name="duracao"
+                        class="form-control mb-2"
+                        placeholder="Duração (min)"
+                        required
+                    >
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">
+                        Salvar
+                    </button>
+                </div>
+
+            </form>
+
         </div>
-
-        <div class="modal-body">
-
-          <input type="text" name="nome" class="form-control mb-2" placeholder="Nome" required>
-          <textarea name="descricao" class="form-control mb-2" placeholder="Descrição" required></textarea>
-          <input type="number" name="sessoes" class="form-control mb-2" min="1" required>
-          <input type="number" name="valor" class="form-control mb-2" step="0.01" required>
-          <input type="number" name="duracao" class="form-control mb-2" required>
-
-        </div>
-
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-success">Salvar</button>
-        </div>
-
-      </form>
-
     </div>
-  </div>
 </div>
 
 </body>
