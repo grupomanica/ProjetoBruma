@@ -10,21 +10,30 @@ if (!isset($_SESSION['clinica_id'])) {
 // Dados da sessão
 $nomeClinica = $_SESSION['clinica_nome'];
 $emailClinica = $_SESSION['clinica_email'];
-$telefoneClinica = $_SESSION['clinica_telefone'];
-$cepClinica = $_SESSION['clinica_cep'];
+$telefoneClinica = $_SESSION['clinica_telefone'] ?? '';
+$cepClinica = $_SESSION['clinica_cep'] ?? '';
 
 
-include("conexao.php");
+require_once("conexao.php");
+
+$pdo = conectar();
 
 $clinica_id = $_SESSION['clinica_id'];
 
-$sql = "SELECT * FROM servicos WHERE clinica_id = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $clinica_id);
-$stmt->execute();
+try {
+    $sql = "SELECT * FROM servicos WHERE clinica_id = :clinica_id";
 
-$result = $stmt->get_result();
-$servicos = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->execute([
+        ':clinica_id' => $clinica_id
+    ]);
+
+    $servicos = $stmt->fetchAll();
+
+} catch (PDOException $e) {
+    die("Erro ao buscar serviços: " . $e->getMessage());
+}   
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -278,48 +287,87 @@ $servicos = $result->fetch_all(MYSQLI_ASSOC);
                 </div>
 
                 <div class="modal-body">
+                    <!-- Tipo do procedimento -->
+                    <label class="form-label">Tipo do procedimento</label>
+                    <select 
+                        name="tipo_procedimento"
+                        class="form-control mb-3"
+                        required
+                    >
+                        <option value="">Selecione o tipo</option>
+                        <option>Limpeza</option>
+                        <option>Botox</option>
+                        <option>Peeling Químico</option>
+                        <option>Microagulhamento</option>
+                        <option>Radiofrequência facial</option>
+                        <option>Skinbooster</option>
+                        <option>Harmonização facial</option>
+                        <option>Preenchimento Labial</option>
+                        <option>Bichectomia</option>
+                        <option>Bioestimuladores de colágeno</option>
+                        <option>Fios de sustentação</option>
+                        <option>Lipo enzimática</option>
+                        <option>Drenagem linfática</option>
+                        <option>Massagem modeladora</option>
+                        <option>Criolipólise</option>
+                        <option>Carboxiterapia</option>
+                        <option>Tratamento para celulite</option>
+                        <option>Detox corporal</option>
+                    </select>
 
+                    <!-- Nome do serviço -->
+                    <label class="form-label">Nome comercial do serviço</label>
                     <input 
                         type="text"
                         name="nome"
-                        class="form-control mb-2"
-                        placeholder="Nome"
+                        class="form-control mb-3"
+                        placeholder="Ex: Botox Premium Full Face"
                         required
                     >
 
+                    <!-- Descrição -->
+                    <label class="form-label">Descrição</label>
                     <textarea 
                         name="descricao"
-                        class="form-control mb-2"
-                        placeholder="Descrição"
+                        class="form-control mb-3"
+                        placeholder="Descreva o procedimento..."
+                        rows="3"
                         required
                     ></textarea>
 
+                    <!-- Sessões -->
+                    <label class="form-label">Quantidade de sessões</label>
                     <input 
                         type="number"
                         name="sessoes"
-                        class="form-control mb-2"
-                        placeholder="Quantidade de sessões"
+                        class="form-control mb-3"
+                        placeholder="Ex: 1"
                         min="1"
                         required
                     >
 
+                    <!-- Valor -->
+                    <label class="form-label">Valor (R$)</label>
                     <input 
                         type="number"
                         name="valor"
-                        class="form-control mb-2"
-                        placeholder="Valor"
+                        class="form-control mb-3"
+                        placeholder="Ex: 350"
                         step="0.01"
+                        min="0"
                         required
                     >
 
+                    <!-- Duração -->
+                    <label class="form-label">Duração (minutos)</label>
                     <input 
                         type="number"
                         name="duracao"
                         class="form-control mb-2"
-                        placeholder="Duração (min)"
+                        placeholder="Ex: 60"
+                        min="1"
                         required
                     >
-
                 </div>
 
                 <div class="modal-footer">
