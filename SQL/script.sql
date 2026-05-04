@@ -5,6 +5,8 @@ USE sistemabruma;
 CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100),
+    sobrenome VARCHAR(100),
+	data_nascimento DATE,
     email VARCHAR(100) UNIQUE,
     senha VARCHAR(255),
     telefone VARCHAR(20)
@@ -30,5 +32,8 @@ create table servicos
 ( 
 botox char(30) not null
 );
+
+SELECT * FROM usuarios;
+
 drop database sistemaBruma;
 drop table agendamento;
