@@ -162,9 +162,20 @@ $qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" . 
             </div>
 
             <div class="text-center mt-4">
-                <button class="btn confirmar-btn">Já paguei</button>
-            </div>
+                <form action="gerar_boleto.php" method="POST" target="_blank">
 
+                    <input type="hidden" name="servico" value="<?= $servico ?>">
+                    <input type="hidden" name="clinica" value="<?= $clinica ?>">
+                    <input type="hidden" name="endereco" value="<?= $endereco ?>">
+                    <input type="hidden" name="valor" value="<?= $valor ?>">
+                    <input type="hidden" name="data" value="<?= $data ?>">
+                    <input type="hidden" name="hora" value="<?= $hora ?>">
+
+                    <button type="submit" class="btn confirmar-btn">
+                        Gerar boleto
+                    </button>
+                </form>
+            </div>
         </div>
 
     </div>
