@@ -1,0 +1,19 @@
+SERVIÇO PADRAO
+
+Tipo do Procedimento:
+Limpeza
+
+Nome comercial do serviço:
+Limpeza de Pele Facial
+
+Descrição:
+Higienização, esfoliação, extração de cravos, cauterização, aplicação de máscara calmante e hidratante e filtro solar.
+
+Quantidade de Sessões:
+1
+
+Valor (R$):
+180
+
+Duração (minutos):
+50
