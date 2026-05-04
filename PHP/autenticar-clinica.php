@@ -1,95 +1,55 @@
 <?php
+session_start();
 require_once("conexao.php");
 
 try {
     $pdo = conectar();
 
-    // =========================
-    // SANITIZAÇÃO
-    // =========================
-    $nome = htmlspecialchars(trim($_POST['nome']));
-    $cnpj = preg_replace('/[^0-9]/', '', $_POST['cnpj']);
-    $telefone = preg_replace('/[^0-9]/', '', $_POST['telefone']);
-    $cidade = htmlspecialchars(trim($_POST['cidade']));
-    $bairro = htmlspecialchars(trim($_POST['bairro']));
-    $endereco = htmlspecialchars(trim($_POST['endereco']));
-    $faixa = htmlspecialchars($_POST['faixa_preco']);
-
+    // Dados do formulário
     $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
-    $senha = $_POST['senha'] ?? '';
-    $confirmar = $_POST['confirmar_senha'] ?? '';
+    $senha = trim($_POST['senha'] ?? '');
 
-    // =========================
-    // VALIDAÇÕES
-    // =========================
-    if (!$nome || !$email || !$senha) {
-        throw new Exception("Preencha os campos obrigatórios");
+    // Validação
+    if (!$email || !$senha) {
+        throw new Exception("Preencha email e senha corretamente.");
     }
 
-    if (strlen($senha) < 6) {
-        throw new Exception("Senha deve ter no mínimo 6 caracteres");
-    }
-
-    if ($senha !== $confirmar) {
-        throw new Exception("As senhas não coincidem");
-    }
-
-    // =========================
-    // VERIFICAR EMAIL
-    // =========================
-    $stmt = $pdo->prepare("SELECT id FROM clinicas WHERE email = ?");
+    // Buscar clínica pelo email
+    $stmt = $pdo->prepare("
+        SELECT * 
+        FROM clinicas 
+        WHERE email = ?
+    ");
+    
     $stmt->execute([$email]);
 
-    if ($stmt->rowCount() > 0) {
-        throw new Exception("Email já cadastrado");
+    $clinica = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // Verifica se encontrou clínica
+    if (!$clinica) {
+        throw new Exception("Clínica não encontrada.");
     }
 
-    // =========================
-    // HASH
-    // =========================
-    $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
+    // Verifica senha
+    if (!password_verify($senha, $clinica['senha'])) {
+        throw new Exception("Senha incorreta.");
+    }
 
-    // =========================
-    // INSERT
-    // =========================
-    $stmt = $pdo->prepare("
-        INSERT INTO clinicas 
-        (nome, email, senha, telefone, endereco, cnpj, cidade, bairro, faixa_preco)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ");
-
-    $stmt->execute([
-        $nome,
-        $email,
-        $senhaHash,
-        $telefone,
-        $endereco,
-        $cnpj,
-        $cidade,
-        $bairro,
-        $faixa
-    ]);
-
-    // =========================
-    // LOGIN AUTOMÁTICO
-    // =========================
-    $id_clinica = $pdo->lastInsertId();
-
-   header("Location: login-clinica.php");
-exit;
+    // Regenera sessão
     session_regenerate_id(true);
 
-    // =========================
-    // COOKIE
-    // =========================
-    setcookie("clinica_login", $email, time() + (86400 * 7), "/", "", false, true);
+    $_SESSION['clinica_id'] = $clinica['id'];
+    $_SESSION['clinica_nome'] = $clinica['nome'];
+    $_SESSION['clinica_email'] = $clinica['email'];
 
-    // =========================
-    // REDIRECIONAMENTO
-    // =========================
-    header("Location:painel-clinica.php");
-    exit;
+    // Redireciona para painel
+    header("Location: painel-clinica.php");
+    exit();
 
 } catch (Exception $e) {
-    echo "<div style='color:red; text-align:center; margin-top:20px;'>".$e->getMessage()."</div>";
+    echo "
+    <div style='color:red; text-align:center; margin-top:20px;'>
+        ".$e->getMessage()."
+    </div>";
 }
+?>
