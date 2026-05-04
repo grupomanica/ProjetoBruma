@@ -14,8 +14,17 @@ $telefoneClinica = $_SESSION['clinica_telefone'];
 $cepClinica = $_SESSION['clinica_cep'];
 
 
-// Temporário até conectar serviços reais do banco
-$servicos = [];
+include("conexao.php");
+
+$clinica_id = $_SESSION['clinica_id'];
+
+$sql = "SELECT * FROM servicos WHERE clinica_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $clinica_id);
+$stmt->execute();
+
+$result = $stmt->get_result();
+$servicos = $result->fetch_all(MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
