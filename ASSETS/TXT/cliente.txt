@@ -6,15 +6,15 @@ Ana
 Email: 
 ana@email.com
 
+Telefone:
+11960603030
+
 Senha:
 Ana#123Vic*
 
 ----
 Sobrenome:
 Vitória
-
-Telefone:
-11960603030
 
 Data de Nascimento:
 02/01/2001
