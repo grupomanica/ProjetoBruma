@@ -1,4 +1,11 @@
 <?php
+session_start();
+
+if(!isset($_SESSION['usuario_id'])){
+    header("Location: login.php");
+    exit();
+}
+
 // Incluindo o autoload do DOM PDF
 require_once '../ASSETS/dompdf/autoload.inc.php';
 
