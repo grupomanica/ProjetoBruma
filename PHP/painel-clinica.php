@@ -232,30 +232,31 @@ try {
         <div class="page d-none" id="perfil">
             <h3>Dados da Clínica</h3>
             <form class="mt-3">
+                <label for="nome">Nome da clínica:</label>
                 <input 
                     class="form-control mb-2"
                     name="nome"
-                    placeholder="Nome da clínica"
                     value="<?= htmlspecialchars($nomeClinica) ?>"
                 >
 
+                <label for="email">E-mail:</label>
                 <input 
                     class="form-control mb-2"
                     name="email"
-                    placeholder="Email"
                     value="<?= htmlspecialchars($emailClinica) ?>"
                 >
 
+                <label for="telefone">Telefone:</label>
                 <input 
                     class="form-control mb-2"
                     name="telefone"
-                    placeholder="Telefone"
                     value="<?= htmlspecialchars($telefoneClinica) ?>"
                 >
 
+                <label for="cep">CEP:</label>
                 <input 
                     class="form-control mb-2"
-                    placeholder="CEP"
+                    name="cep"
                     value="<?= htmlspecialchars($cepClinica) ?>"
                 >
 
