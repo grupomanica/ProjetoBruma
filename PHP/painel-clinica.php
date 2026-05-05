@@ -274,7 +274,7 @@ try {
     <div class="modal-dialog">
         <div class="modal-content">
 
-            <form action="salvar_servico.php" method="POST">
+            <form action="salvar-servico.php" method="POST">
 
                 <div class="modal-header">
                     <h5 class="modal-title">Novo Serviço</h5>
