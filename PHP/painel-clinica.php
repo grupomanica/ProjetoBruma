@@ -33,7 +33,30 @@ try {
 
 } catch (PDOException $e) {
     die("Erro ao buscar serviços: " . $e->getMessage());
-}   
+}
+
+try {
+    $sqlProfissionaisAtivos = "
+        SELECT COUNT(*) as total_profissionais
+        FROM profissionais
+        WHERE clinica_id = :clinica_id
+        AND status = 'ativo'
+    ";
+
+    $stmtProfissionaisAtivos = $pdo->prepare($sqlProfissionaisAtivos);
+
+    $stmtProfissionaisAtivos->execute([
+        ':clinica_id' => $clinica_id
+    ]);
+
+    $resultadoProfissionais = $stmtProfissionaisAtivos->fetch(PDO::FETCH_ASSOC);
+
+    $totalProfissionaisAtivos = $resultadoProfissionais['total_profissionais'];
+
+} catch (PDOException $e) {
+    $totalProfissionaisAtivos = 0;
+}
+   
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -127,7 +150,7 @@ try {
                 <div class="col-md-4">
                     <div class="card-mini">
                         <span>Profissionais</span>
-                        <strong>--</strong>
+                        <strong><?= $totalProfissionaisAtivos ?></strong>
                     </div>
                 </div>
 
@@ -221,10 +244,222 @@ try {
 
         <!-- PROFISSIONAIS -->
         <div class="page d-none" id="profissionais">
-            <h3>Profissionais</h3>
 
-            <div class="alert alert-secondary">
-                Nenhum profissional cadastrado ainda.
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3>Profissionais</h3>
+
+                <button 
+                    class="btn btn-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalProfissional"
+                >
+                    + Novo Profissional
+                </button>
+            </div>
+
+            <?php
+            try {
+                $sqlProfissionais = "SELECT * FROM profissionais 
+                                    WHERE clinica_id = :clinica_id
+                                    ORDER BY nome ASC";
+
+                $stmtProfissionais = $pdo->prepare($sqlProfissionais);
+                $stmtProfissionais->execute([
+                    ':clinica_id' => $clinica_id
+                ]);
+
+                $profissionais = $stmtProfissionais->fetchAll();
+
+            } catch (PDOException $e) {
+                $profissionais = [];
+            }
+            ?>
+
+            <?php if(count($profissionais) > 0): ?>
+
+                <div class="card shadow-sm">
+                    <div class="card-body">
+
+                        <div class="table-responsive">
+                            <table class="table align-middle">
+
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>Registro</th>
+                                        <th>Especialidade</th>
+                                        <th>Contato</th>
+                                        <th>Status</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <?php foreach($profissionais as $profissional): ?>
+                                        <tr>
+
+                                            <!-- Nome exibido ao cliente -->
+                                            <td>
+                                                <?= htmlspecialchars($profissional['nome']) ?>
+                                            </td>
+
+                                            <!-- Registro exibido ao cliente -->
+                                            <td>
+                                                <?= htmlspecialchars($profissional['registro']) ?>
+                                            </td>
+
+                                            <td>
+                                                <?= htmlspecialchars($profissional['especialidade']) ?>
+                                            </td>
+
+                                            <td>
+                                                <small>
+                                                    <?= htmlspecialchars($profissional['telefone']) ?><br>
+                                                    <?= htmlspecialchars($profissional['email']) ?>
+                                                </small>
+                                            </td>
+
+                                            <td>
+                                                <?php if($profissional['status'] == 'ativo'): ?>
+                                                    <span class="badge bg-success">Ativo</span>
+                                                <?php else: ?>
+                                                    <span class="badge bg-secondary">Inativo</span>
+                                                <?php endif; ?>
+                                            </td>
+
+                                            <td>
+                                                <div class="d-flex gap-2">
+
+                                                    <a 
+                                                        href="editar-profissional.php?id=<?= $profissional['id'] ?>"
+                                                        class="btn btn-sm btn-warning"
+                                                    >
+                                                        <i class="bi bi-pencil"></i>
+                                                    </a>
+
+                                                    <a 
+                                                        href="remover-profissional.php?id=<?= $profissional['id'] ?>"
+                                                        class="btn btn-sm btn-danger"
+                                                        onclick="return confirm('Deseja remover este profissional?')"
+                                                    >
+                                                        <i class="bi bi-trash"></i>
+                                                    </a>
+
+                                                </div>
+                                            </td>
+
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+
+            <?php else: ?>
+
+                <div class="alert alert-secondary">
+                    Nenhum profissional cadastrado ainda.
+                </div>
+
+            <?php endif; ?>
+
+        </div>
+
+
+        <!-- MODAL PROFISSIONAL -->
+        <div class="modal fade" id="modalProfissional" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <form action="salvar-profissional.php" method="POST">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title">Cadastrar Profissional</h5>
+
+                            <button 
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                            ></button>
+                        </div>
+
+                        <div class="modal-body">
+
+                            <!-- Nome -->
+                            <label class="form-label">Nome completo</label>
+                            <input
+                                type="text"
+                                name="nome"
+                                class="form-control mb-3"
+                                placeholder="Nome do profissional"
+                                required
+                            >
+
+                            <!-- Registro -->
+                            <label class="form-label">Registro profissional</label>
+                            <input
+                                type="text"
+                                name="registro"
+                                class="form-control mb-3"
+                                placeholder="Ex: CRBM, CRO, CRM..."
+                                required
+                            >
+
+                            <!-- Especialidade -->
+                            <label class="form-label">Especialidade</label>
+                            <input
+                                type="text"
+                                name="especialidade"
+                                class="form-control mb-3"
+                                placeholder="Ex: Biomédico Esteta"
+                                required
+                            >
+
+                            <!-- Telefone -->
+                            <label class="form-label">Telefone</label>
+                            <input
+                                type="text"
+                                name="telefone"
+                                class="form-control mb-3"
+                                placeholder="(11) 99999-9999"
+                                required
+                            >
+
+                            <!-- Email -->
+                            <label class="form-label">E-mail</label>
+                            <input
+                                type="email"
+                                name="email"
+                                class="form-control mb-3"
+                                placeholder="email@exemplo.com"
+                                required
+                            >
+
+                            <!-- Status -->
+                            <label class="form-label">Status</label>
+                            <select 
+                                name="status"
+                                class="form-control mb-3"
+                                required
+                            >
+                                <option value="ativo">Ativo</option>
+                                <option value="inativo">Inativo</option>
+                            </select>
+
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">
+                                Cadastrar
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
             </div>
         </div>
 
@@ -373,7 +608,7 @@ try {
 
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success">
-                        Salvar
+                        Cadastrar
                     </button>
                 </div>
 
