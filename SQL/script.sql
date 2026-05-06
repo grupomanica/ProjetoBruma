@@ -69,9 +69,22 @@ CREATE TABLE agendamentos (
     FOREIGN KEY (horario_id) REFERENCES horarios_disponiveis(id)
 );
 
+CREATE TABLE profissionais (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    clinica_id INT NOT NULL,
+    nome VARCHAR(150) NOT NULL,
+    registro VARCHAR(100) NOT NULL,
+    especialidade VARCHAR(150) NOT NULL,
+    telefone VARCHAR(20),
+    email VARCHAR(150),
+    status VARCHAR(20) DEFAULT 'ativo',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 SELECT * FROM usuarios;
 SELECT * FROM clinicas;
 SELECT senha FROM clinicas;
+SELECT * from profissionais;
 
 DROP DATABASE sistemaBruma;
 DROP TABLE agendamentos;
