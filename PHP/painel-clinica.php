@@ -211,10 +211,40 @@ try {
 
         <!-- HORÁRIOS -->
         <div class="page d-none" id="horarios">
-            <h3>Horários Disponíveis</h3>
 
-            <div class="alert alert-info">
-                Configure os horários da clínica
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3>Horários Disponíveis</h3>
+                
+                <button 
+                        class="btn btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalHorarios"
+                    >
+                        + Novo Horário
+                    </button>
+            </div>
+
+                <div class="alert alert-info">
+                    Configure os horários da clínica
+                </div>
+        </div>
+
+        <!-- MODAL HORÁRIOS -->
+         <div class="modal fade" id="modalHorarios" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="salvar-horarios.php" method="post">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Configurar Horários</h5>
+
+                            <button 
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                            ></button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
 
@@ -501,7 +531,6 @@ try {
 
             </form>
         </div>
-
     </div>
 </div>
 
@@ -509,7 +538,6 @@ try {
 <div class="modal fade" id="modalServico" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-
             <form action="salvar-servico.php" method="POST">
 
                 <div class="modal-header">
@@ -613,7 +641,6 @@ try {
                 </div>
 
             </form>
-
         </div>
     </div>
 </div>
