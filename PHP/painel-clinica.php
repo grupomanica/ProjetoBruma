@@ -12,6 +12,9 @@ $nomeClinica = $_SESSION['clinica_nome'];
 $emailClinica = $_SESSION['clinica_email'];
 $telefoneClinica = $_SESSION['clinica_telefone'] ?? '';
 $cepClinica = $_SESSION['clinica_cep'] ?? '';
+$clinica_id = $_SESSION['clinica_id'];
+
+
 
 
 require_once("conexao.php");
@@ -213,7 +216,7 @@ try {
         <div class="page d-none" id="horarios">
 
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3>Horários Disponíveis</h3>
+                <h3>Todos os Horários</h3>
                 
                 <button 
                         class="btn btn-primary"
@@ -223,30 +226,203 @@ try {
                         + Novo Horário
                     </button>
             </div>
+<?php
 
-                <div class="alert alert-info">
-                    Configure os horários da clínica
-                </div>
+try {
+
+   $sqlHorarios = "
+    SELECT 
+        h.*,
+
+        CASE
+            WHEN a.id IS NOT NULL THEN 'Ocupado'
+            ELSE 'Livre'
+        END AS status_horario
+
+    FROM horarios_disponiveis h
+
+    LEFT JOIN agendamentos a
+        ON a.horario_id = h.id
+
+    WHERE h.clinica_id = :clinica_id
+
+    ORDER BY h.data_disponivel ASC, h.horario ASC
+";
+
+    $stmtHorarios = $pdo->prepare($sqlHorarios);
+
+    $stmtHorarios->execute([
+        ':clinica_id' => $clinica_id
+    ]);
+
+    $horarios = $stmtHorarios->fetchAll(PDO::FETCH_ASSOC);
+
+} catch(PDOException $e) {
+
+    $horarios = [];
+
+}
+
+?>
+
+<?php if(count($horarios) > 0): ?>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <table class="table align-middle">
+
+<thead>
+    <tr>
+        <th>Data</th>
+        <th>Horário</th>
+        <th>Status</th>
+    </tr>
+</thead>
+
+           <tbody>
+
+    <?php foreach($horarios as $horario): ?>
+
+        <tr>
+
+            <td>
+                <?= date('d/m/Y', strtotime($horario['data_disponivel'])) ?>
+            </td>
+
+            <td>
+                <?= substr($horario['horario'], 0, 5) ?>
+            </td>
+
+            <td>
+
+                <?php if($horario['status_horario'] == 'Livre'): ?>
+
+                    <span class="badge bg-success">
+                        Livre
+                    </span>
+
+                <?php else: ?>
+
+                    <span class="badge bg-danger">
+                        Ocupado
+                    </span>
+
+                <?php endif; ?>
+
+            </td>
+
+        </tr>
+
+    <?php endforeach; ?>
+
+</tbody>     
+
+            </table>
+
+        </div>
+    </div>
+
+<?php else: ?>
+
+    <div class="alert alert-warning">
+        Nenhum horário disponível.
+    </div>
+
+<?php endif; ?>
+              
         </div>
 
-        <!-- MODAL HORÁRIOS -->
-         <div class="modal fade" id="modalHorarios" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form action="salvar-horarios.php" method="post">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Configurar Horários</h5>
 
-                            <button 
-                                type="button"
-                                class="btn-close"
-                                data-bs-dismiss="modal"
-                            ></button>
-                        </div>
-                    </form>
+         <!-- MODAL HORÁRIOS -->
+<div class="modal fade" id="modalHorarios" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <form action="salvar_horario.php" method="POST">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Novo Horário Disponível
+                    </h5>
+
+                    <button 
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                    ></button>
                 </div>
-            </div>
+
+                <div class="modal-body">
+
+                <label class="mb-1">Serviço</label>
+
+<select
+    name="servico_id"
+    class="form-control mb-3"
+    required
+>
+
+    <option value="">
+        Selecione um serviço
+    </option>
+
+    <?php foreach($servicos as $servico): ?>
+
+        <option value="<?= $servico['id'] ?>">
+
+            <?= htmlspecialchars($servico['nome']) ?>
+
+        </option>
+
+    <?php endforeach; ?>
+
+</select>
+
+                    <label class="mb-1">Data</label>
+
+                    <input 
+                        type="date"
+                        name="data"
+                        class="form-control mb-3"
+                        required
+                    >
+
+                    <label class="mb-1">Horário</label>
+
+                    <input 
+                        type="time"
+                        name="hora"
+                        class="form-control"
+                        required
+                    >
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button 
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Cancelar
+                    </button>
+
+                    <button 
+                        type="submit"
+                        class="btn btn-success"
+                    >
+                        Salvar horário
+                    </button>
+
+                </div>
+
+            </form>
+
         </div>
+    </div>
+</div>
 
         <!-- AGENDAMENTOS -->
         <div class="page d-none" id="agendamentos">
@@ -318,6 +494,7 @@ try {
                                         <th>Nome</th>
                                         <th>Registro</th>
                                         <th>Especialidade</th>
+
                                         <th>Contato</th>
                                         <th>Status</th>
                                         <th>Ações</th>
@@ -467,6 +644,73 @@ try {
                                 placeholder="email@exemplo.com"
                                 required
                             >
+
+                            <!-- Horário de trabalho -->
+<label class="form-label">Horário de trabalho</label>
+
+<div class="row mb-3">
+
+    <div class="col-6">
+        <input
+            type="time"
+            name="hora_inicio"
+            class="form-control"
+            required
+        >
+    </div>
+
+    <div class="col-6">
+        <input
+            type="time"
+            name="hora_fim"
+            class="form-control"
+            required
+        >
+    </div>
+
+</div>
+
+<!-- Dias da semana -->
+<label class="form-label">Dias da semana</label>
+
+<div class="mb-3">
+
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="dias_semana[]" value="Segunda">
+        <label class="form-check-label">Segunda-feira</label>
+    </div>
+
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="dias_semana[]" value="Terça">
+        <label class="form-check-label">Terça-feira</label>
+    </div>
+
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="dias_semana[]" value="Quarta">
+        <label class="form-check-label">Quarta-feira</label>
+    </div>
+
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="dias_semana[]" value="Quinta">
+        <label class="form-check-label">Quinta-feira</label>
+    </div>
+
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="dias_semana[]" value="Sexta">
+        <label class="form-check-label">Sexta-feira</label>
+    </div>
+
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="dias_semana[]" value="Sábado">
+        <label class="form-check-label">Sábado</label>
+    </div>
+
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="dias_semana[]" value="Domingo">
+        <label class="form-check-label">Domingo</label>
+    </div>
+
+</div>
 
                             <!-- Status -->
                             <label class="form-label">Status</label>

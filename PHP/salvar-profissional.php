@@ -15,6 +15,9 @@ $registro = trim($_POST['registro'] ?? '');
 $especialidade = trim($_POST['especialidade'] ?? '');
 $telefone = trim($_POST['telefone'] ?? '');
 $email = trim($_POST['email'] ?? '');
+$hora_inicio = trim($_POST['hora_inicio'] ?? '');
+$hora_fim = trim($_POST['hora_fim'] ?? '');
+$dias_semana = implode(', ', $_POST['dias_semana'] ?? []);
 $status = trim($_POST['status'] ?? '');
 
 if (
@@ -32,21 +35,45 @@ try {
     $pdo = conectar();
 
     $sql = "INSERT INTO profissionais 
-            (clinica_id, nome, registro, especialidade, telefone, email, status)
-            VALUES 
-            (:clinica_id, :nome, :registro, :especialidade, :telefone, :email, :status)";
-
+(
+    clinica_id,
+    nome,
+    registro,
+    especialidade,
+    telefone,
+    email,
+    hora_inicio,
+    hora_fim,
+    dias_semana,
+    status
+)
+VALUES 
+(
+    :clinica_id,
+    :nome,
+    :registro,
+    :especialidade,
+    :telefone,
+    :email,
+    :hora_inicio,
+    :hora_fim,
+    :dias_semana,
+    :status
+)";
     $stmt = $pdo->prepare($sql);
 
     $stmt->execute([
-        ':clinica_id' => $clinica_id,
-        ':nome' => $nome,
-        ':registro' => $registro,
-        ':especialidade' => $especialidade,
-        ':telefone' => $telefone,
-        ':email' => $email,
-        ':status' => $status
-    ]);
+    ':clinica_id' => $clinica_id,
+    ':nome' => $nome,
+    ':registro' => $registro,
+    ':especialidade' => $especialidade,
+    ':telefone' => $telefone,
+    ':email' => $email,
+    ':hora_inicio' => $hora_inicio,
+    ':hora_fim' => $hora_fim,
+    ':dias_semana' => $dias_semana,
+    ':status' => $status
+]);
 
     header("Location: painel-clinica.php");
     exit();

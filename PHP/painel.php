@@ -11,6 +11,9 @@ if(!isset($_SESSION['usuario_id'])){
 $nome = $_SESSION['usuario_nome'];
 $usuario_id = $_SESSION['usuario_id'];
 
+$usuario = [];
+$agendamentos = [];
+
 try {
     $pdo = conectar();
 
@@ -23,6 +26,22 @@ try {
     $stmt->execute([$usuario_id]);
 
     $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+        // BUSCAR AGENDAMENTOS DO USUÁRIO
+    $stmtAgendamentos = $pdo->prepare("
+        SELECT 
+            a.*,
+            s.nome AS servico,
+            c.nome AS clinica
+        FROM agendamentos a
+        INNER JOIN servicos s ON a.servico_id = s.id
+        INNER JOIN clinicas c ON s.clinica_id = c.id
+        WHERE a.usuario_id = ?
+        ORDER BY a.data DESC, a.hora DESC
+    ");
+
+    $stmtAgendamentos->execute([$usuario_id]);
+
+    $agendamentos = $stmtAgendamentos->fetchAll(PDO::FETCH_ASSOC);
 
 } catch (Exception $e) {
     $usuario = [];
@@ -135,10 +154,44 @@ try {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td colspan="4">Nenhum agendamento encontrado</td>
-                        </tr>
-                    </tbody>
+
+<?php if(count($agendamentos) > 0): ?>
+
+    <?php foreach($agendamentos as $agendamento): ?>
+
+        <tr>
+
+            <td>
+                <?= htmlspecialchars($agendamento['clinica']) ?>
+            </td>
+
+            <td>
+                <?= htmlspecialchars($agendamento['servico']) ?>
+            </td>
+
+            <td>
+                <?= date('d/m/Y', strtotime($agendamento['data'])) ?>
+                às
+                <?= substr($agendamento['hora'], 0, 5) ?>
+            </td>
+
+            <td>
+                <?= ucfirst($agendamento['status']) ?>
+            </td>
+
+        </tr>
+
+    <?php endforeach; ?>
+
+<?php else: ?>
+
+    <tr>
+        <td colspan="4">Nenhum agendamento encontrado</td>
+    </tr>
+
+<?php endif; ?>
+
+</tbody>
                 </table>
             </div>
 

@@ -1,39 +1,160 @@
 <?php
+
+session_start();
+
 require_once("conexao.php");
 
+if(!isset($_SESSION['usuario_id'])){
+    header("Location: login.php");
+    exit();
+}
+
 try {
+
     $pdo = conectar();
 
-    $id_usuario = $_SESSION['usuario_id'] ?? 1;
+    $usuario_id = $_SESSION['usuario_id'];
 
-    $id_servico = $_POST['id_servico'];
-    $data = $_POST['data'];
-    $hora = $_POST['hora'];
-    $nome = htmlspecialchars($_POST['nome']);
-    $telefone = htmlspecialchars($_POST['telefone']);
+    $servico_id = $_POST['servico_id'] ?? '';
+    $clinica_id = $_POST['clinica_id'] ?? '';
+    $horarioSelecionado = $_POST['horario'] ?? '';
+    $profissional_id = $_POST['profissional_id'] ?? '';
+    $dataNascimento = $_POST['data_nascimento'] ?? '';
 
-    $stmt = $pdo->prepare("
-        INSERT INTO agendamentos 
-        (id_usuario, id_servico, data, hora, nome_cliente, telefone, status)
-        VALUES (?, ?, ?, ?, ?, ?, 'pendente')
+    // VALIDA CAMPOS
+    if(
+        empty($servico_id) ||
+        empty($clinica_id) ||
+        empty($horarioSelecionado) ||
+        empty($profissional_id)
+    ){
+
+        die("Erro: dados do agendamento não enviados.");
+    }
+
+    // VALIDA IDADE
+    if(empty($dataNascimento)){
+
+        die("Data de nascimento não informada.");
+    }
+
+    $hoje = new DateTime();
+
+    $nascimento = new DateTime($dataNascimento);
+
+    $idade = $hoje->diff($nascimento)->y;
+
+    if($idade < 18){
+
+        echo "
+            <script>
+                alert('Você deve ser maior de idade para continuar o agendamento.');
+                window.history.back();
+            </script>
+        ";
+
+        exit();
+    }
+
+    // separa horario
+    $partes = explode('|', $horarioSelecionado);
+
+if(count($partes) < 3){
+
+    die("Horário inválido.");
+}
+
+$horario_id = $partes[0];
+$data = $partes[1];
+$hora = $partes[2];
+    // BUSCA VALOR
+    $stmtServico = $pdo->prepare("
+        SELECT valor
+        FROM servicos
+        WHERE id = :id
     ");
 
-    $stmt->execute([
-        $id_usuario,
-        $id_servico,
-        $data,
-        $hora,
-        $nome,
-        $telefone
+    $stmtServico->execute([
+        ':id' => $servico_id
     ]);
 
-    $id_agendamento = $pdo->lastInsertId();
+    $servico = $stmtServico->fetch(PDO::FETCH_ASSOC);
 
-    // REDIRECIONA PARA PAGAMENTO
-    header("Location: ?id=$id_agendamento");
-    exit;
+    if(!$servico){
 
-} catch(Exception $e) {
-    echo $e->getMessage();
+        die("Serviço não encontrado.");
+    }
+
+    $valor = $servico['valor'];
+
+    // INSERT AGENDAMENTO
+    $sql = "
+        INSERT INTO agendamentos (
+            usuario_id,
+            clinica_id,
+            servico_id,
+            profissional_id,
+            horario_id,
+            valor,
+            status_pagamento,
+            status_agendamento
+        )
+        VALUES (
+            :usuario_id,
+            :clinica_id,
+            :servico_id,
+            :profissional_id,
+            :horario_id,
+            :valor,
+            :status_pagamento,
+            :status_agendamento
+        )
+    ";
+
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->execute([
+
+        ':usuario_id' => $usuario_id,
+
+        ':clinica_id' => $clinica_id,
+
+        ':servico_id' => $servico_id,
+
+        ':profissional_id' => $profissional_id,
+
+        ':horario_id' => $horario_id,
+
+        ':valor' => $valor,
+
+        ':status_pagamento' => 'pendente',
+
+        ':status_agendamento' => 'confirmado'
+    ]);
+
+    // OCUPA HORÁRIO
+    $stmtHorario = $pdo->prepare("
+        UPDATE horarios_disponiveis
+        SET status = 'ocupado'
+        WHERE id = :horario_id
+    ");
+
+    $stmtHorario->execute([
+        ':horario_id' => $horario_id
+    ]);
+
+    echo "
+        <script>
+            alert('Agendamento realizado com sucesso!');
+            window.location.href='painel.php';
+        </script>
+    ";
+
+    exit();
+
+} catch(PDOException $e){
+
+    die("Erro no banco: " . $e->getMessage());
+
 }
 ?>

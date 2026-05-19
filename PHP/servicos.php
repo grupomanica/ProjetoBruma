@@ -18,11 +18,14 @@ try {
             s.nome,
             s.descricao,
             s.valor,
+            s.clinica_id,
             c.nome AS nome_clinica,
             c.bairro
         FROM servicos s
-        INNER JOIN clinicas c 
+
+        INNER JOIN clinicas c
             ON s.clinica_id = c.id
+
         ORDER BY s.id DESC
     ";
 
@@ -32,7 +35,9 @@ try {
     $servicos = $stmt->fetchAll();
 
 } catch (PDOException $e) {
+
     die("Erro ao buscar serviços: " . $e->getMessage());
+
 }
 ?>
 
@@ -58,9 +63,11 @@ try {
 <!-- HEADER -->
 <header class="header-bruma">
     <div class="container d-flex justify-content-between align-items-center">
+
         <img src="../ASSETS/IMG/logo-horizontal-roxo.png" width="150">
 
         <div class="d-flex align-items-center gap-3">
+
             <a href="painel.php" class="perfil-link">
                 <i class="bi bi-person-circle"></i> Meu perfil
             </a>
@@ -68,17 +75,20 @@ try {
             <a href="logout.php" class="btn btn-outline-dark btn-sm">
                 Sair
             </a>
+
         </div>
     </div>
 </header>
 
 <!-- FILTROS -->
 <section class="container filtros mt-4">
+
     <div class="row g-3">
 
         <!-- filtro serviço -->
         <div class="col-md-4">
             <div class="filtro-box">
+
                 <i class="bi bi-stars"></i>
 
                 <select class="form-select">
@@ -102,12 +112,14 @@ try {
                     <option>Tratamento para celulite</option>
                     <option>Detox corporal</option>
                 </select>
+
             </div>
         </div>
 
         <!-- filtro região -->
         <div class="col-md-4">
             <div class="filtro-box">
+
                 <i class="bi bi-geo-alt"></i>
 
                 <select class="form-select">
@@ -118,12 +130,14 @@ try {
                     <option>Leste</option>
                     <option>Oeste</option>
                 </select>
+
             </div>
         </div>
 
         <!-- filtro preço -->
         <div class="col-md-4">
             <div class="filtro-box">
+
                 <i class="bi bi-currency-dollar"></i>
 
                 <select class="form-select">
@@ -133,6 +147,7 @@ try {
                     <option>R$200 - R$400</option>
                     <option>Acima de R$400</option>
                 </select>
+
             </div>
         </div>
 
@@ -151,6 +166,7 @@ try {
             <?php foreach($servicos as $row): ?>
 
                 <div class="col-md-4">
+
                     <div class="card shadow-sm h-100 p-3">
 
                         <h5>
@@ -177,6 +193,8 @@ try {
                         </p>
 
                         <form action="agendamento.php" method="POST">
+
+                            <!-- IDs -->
                             <input 
                                 type="hidden" 
                                 name="servico_id" 
@@ -185,14 +203,8 @@ try {
 
                             <input 
                                 type="hidden" 
-                                name="servico" 
-                                value="<?= htmlspecialchars($row['nome']) ?>"
-                            >
-
-                            <input 
-                                type="hidden" 
-                                name="clinica" 
-                                value="<?= htmlspecialchars($row['nome_clinica']) ?>"
+                                name="clinica_id" 
+                                value="<?= $row['clinica_id'] ?>"
                             >
 
                             <input 
@@ -201,9 +213,180 @@ try {
                                 value="<?= $row['valor'] ?>"
                             >
 
-                            <button class="btn btn-primary w-100">
+                            <input 
+    type="hidden" 
+    name="servico"
+    value="<?= $row['nome'] ?>"
+>
+
+<input 
+    type="hidden" 
+    name="clinica"
+    value="<?= $row['nome_clinica'] ?>"
+>
+
+<input 
+    type="hidden" 
+    name="endereco"
+    value="<?= $row['bairro'] ?>"
+>
+
+                            <?php
+
+                            $stmtHorarios = $pdo->prepare("
+                                SELECT *
+                                FROM horarios_disponiveis
+                                WHERE servico_id = ?
+                                AND status = 'livre'
+                                AND data_disponivel >= CURDATE()
+                                ORDER BY data_disponivel ASC, horario ASC
+                            ");
+
+                            $stmtHorarios->execute([
+                                $row['id']
+                            ]);
+
+                            $horarios = $stmtHorarios->fetchAll(PDO::FETCH_ASSOC);
+
+                            ?>
+
+                            <div class="horarios-box mb-3">
+
+<?php
+
+$datas = [];
+
+foreach($horarios as $h){
+
+    $datas[$h['data_disponivel']][] = $h;
+}
+
+?>
+
+<?php if(count($datas) > 0): ?>
+
+    <?php foreach($datas as $data => $listaHorarios): ?>
+
+        <button
+            type="button"
+            class="btn btn-outline-primary mb-2"
+            data-bs-toggle="modal"
+            data-bs-target="#modal<?= md5($data . $row['id']) ?>"
+        >
+
+            <?= date('d/m/Y', strtotime($data)) ?>
+
+        </button>
+
+        
+        <!-- MODAL -->
+<div
+    class="modal fade"
+    id="modal<?= md5($data . $row['id']) ?>"
+    tabindex="-1"
+>
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    Horários disponíveis
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                ></button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <?php foreach($listaHorarios as $horario): ?>
+
+                    <div class="mb-2">
+
+                        <input
+                            type="radio"
+                            class="btn-check"
+        name="horario"
+value="<?= $horario['id'] ?>|<?= $horario['data_disponivel'] ?>|<?= $horario['horario'] ?>"
+                            id="horario<?= $horario['id'] ?>"
+                            
+                            required
+                        >
+
+                        <label
+                            class="btn btn-outline-dark w-100"
+                            for="horario<?= $horario['id'] ?>"
+                            onclick="
+                                document.getElementById(
+                                    'horarioSelecionado<?= md5($data . $row['id']) ?>'
+                                ).innerHTML = 'Horário selecionado: <?= substr($horario['horario'], 0, 5) ?>';
+                                
+                                bootstrap.Modal.getInstance(
+                                    document.getElementById(
+                                        'modal<?= md5($data . $row['id']) ?>'
+                                    )
+                                ).hide();
+                            "
+                        >
+
+                            <?= substr($horario['horario'], 0, 5) ?>
+
+                        </label>
+
+                    </div>
+
+                <?php endforeach; ?>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- TEXTO MOSTRANDO HORÁRIO ESCOLHIDO -->
+<div
+    id="horarioSelecionado<?= md5($data . $row['id']) ?>"
+    class="small text-success mb-3"
+>
+</div>
+
+    <?php endforeach; ?>
+
+<?php else: ?>
+
+    <p class="text-muted">
+        Nenhum horário disponível
+    </p>
+
+<?php endif; ?>
+
+</div>
+
+
+
+
+
+
+
+
+
+</select>
+
+    
+
+
+
+                            <button type="submit" class="btn btn-primary w-100">
                                 Agendar
                             </button>
+
                         </form>
 
                     </div>
@@ -214,15 +397,22 @@ try {
         <?php else: ?>
 
             <div class="col-12">
+
                 <div class="alert alert-warning text-center">
                     Nenhum serviço cadastrado pelas clínicas ainda.
                 </div>
+
             </div>
 
         <?php endif; ?>
 
     </div>
+
 </section>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
 
 </body>
 </html>
