@@ -290,9 +290,16 @@ try {
                 <?= date('d/m/Y', strtotime($horario['data_disponivel'])) ?>
             </td>
 
-            <td>
-                <?= substr($horario['horario'], 0, 5) ?>
-            </td>
+         <td>
+
+    <a
+        href="alterar-horario-agendamento.php?id=<?= $horario['id'] ?>"
+        class="text-decoration-none fw-semibold"
+    >
+        <?= substr($horario['horario'], 0, 5) ?>
+    </a>
+
+</td>
 
             <td>
 
@@ -424,29 +431,461 @@ try {
     </div>
 </div>
 
-        <!-- AGENDAMENTOS -->
-        <div class="page d-none" id="agendamentos">
-            <h3>Agendamentos</h3>
+<!-- AGENDAMENTOS -->
+<div class="page d-none" id="agendamentos">
 
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Cliente</th>
-                        <th>Serviço</th>
-                        <th>Data</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Agendamentos</h3>
+    </div>
 
-                <tbody>
-                    <tr>
-                        <td colspan="4">
-                            Nenhum agendamento ainda
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+<?php
+
+try {
+
+    $sqlAgendamentos = "
+
+    SELECT
+
+        a.id,
+
+        a.status_agendamento,
+        a.status_pagamento,
+        a.created_at,
+
+        u.nome AS cliente_nome,
+        u.sobrenome AS cliente_sobrenome,
+        u.telefone AS telefone,
+        u.email AS cliente_email,
+
+        s.nome AS servico_nome,
+
+        p.nome AS profissional_nome,
+
+        h.id AS horario_id,
+        h.data_disponivel,
+        h.horario
+
+        FROM agendamentos a
+
+        INNER JOIN usuarios u
+            ON u.id = a.usuario_id
+
+        INNER JOIN servicos s
+            ON s.id = a.servico_id
+
+        INNER JOIN horarios_disponiveis h
+            ON h.id = a.horario_id
+
+        LEFT JOIN profissionais p
+            ON p.id = a.profissional_id
+
+        WHERE a.clinica_id = :clinica_id
+
+        ORDER BY h.data_disponivel DESC, h.horario DESC
+
+    ";
+
+    $stmtAgendamentos = $pdo->prepare($sqlAgendamentos);
+
+    $stmtAgendamentos->execute([
+        ':clinica_id' => $clinica_id
+    ]);
+
+    $agendamentos = $stmtAgendamentos->fetchAll(PDO::FETCH_ASSOC);
+
+} catch(PDOException $e) {
+
+    $agendamentos = [];
+
+}
+
+?>
+
+<?php if(count($agendamentos) > 0): ?>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Cliente</th>
+
+                            <th>Serviço</th>
+
+                            <th>Profissional</th>
+
+                            <th>Data</th>
+
+                            <th>Horário</th>
+
+                            <th>Pagamento</th>
+
+                            <th>Status</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+<?php foreach($agendamentos as $agendamento): ?>
+
+<tr>
+
+    <td>
+
+    <a
+        href="#"
+        class="text-decoration-none fw-semibold"
+        data-bs-toggle="modal"
+        data-bs-target="#modalCliente<?= $agendamento['id'] ?>"
+    >
+        <?= htmlspecialchars(
+            $agendamento['cliente_nome'] . ' ' .
+            $agendamento['cliente_sobrenome']
+        ) ?>
+    </a>
+
+</td>
+
+    <!-- MODAL ALTERAR HORÁRIO -->
+<div
+    class="modal fade"
+    id="modalHorario<?= $agendamento['id'] ?>"
+    tabindex="-1"
+>
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+<?php
+
+$sqlHorariosDisponiveis = "
+
+    SELECT
+        h.id,
+        h.horario
+
+    FROM horarios_disponiveis h
+
+    LEFT JOIN agendamentos a
+        ON a.horario_id = h.id
+
+    WHERE h.clinica_id = :clinica_id
+
+    AND h.data_disponivel = :data
+
+    AND (
+        a.id IS NULL
+        OR h.id = :horario_atual
+    )
+
+    ORDER BY h.horario ASC
+
+";
+
+$stmtHorariosDisponiveis = $pdo->prepare($sqlHorariosDisponiveis);
+
+$stmtHorariosDisponiveis->execute([
+    ':clinica_id' => $clinica_id,
+    ':data' => $agendamento['data_disponivel'],
+    ':horario_atual' => $agendamento['horario_id']
+]);
+
+$horariosDisponiveis = $stmtHorariosDisponiveis->fetchAll(PDO::FETCH_ASSOC);
+
+?>
+
+            <form action="alterar-horario-agendamento.php" method="POST">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        Alterar horário
+                    </h5>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                    ></button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <input
+                        type="hidden"
+                        name="agendamento_id"
+                        value="<?= $agendamento['id'] ?>"
+                    >
+
+                    <label class="form-label">
+                        Horários disponíveis
+                    </label>
+
+                    <select
+                        name="horario_id"
+                        class="form-control"
+                        required
+                    >
+
+<?php foreach($horariosDisponiveis as $horarioDisponivel): ?>
+
+    <option
+        value="<?= $horarioDisponivel['id'] ?>"
+
+        <?= $horarioDisponivel['id'] == $agendamento['horario_id']
+            ? 'selected'
+            : ''
+        ?>
+    >
+
+        <?= substr($horarioDisponivel['horario'], 0, 5) ?>
+
+    </option>
+
+<?php endforeach; ?>
+
+                    </select>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Cancelar
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-success"
+                    >
+                        Salvar
+                    </button>
+
+                </div>
+
+            </form>
+
         </div>
+
+    </div>
+
+</div>
+
+    <td>
+        <?= htmlspecialchars($agendamento['servico_nome']) ?>
+    </td>
+
+    <td>
+
+    
+
+<?php if(!empty($agendamento['profissional_nome'])): ?>
+
+    <a
+        href="alterar-profissional-agendamento.php?id=<?= $agendamento['id'] ?>"
+        class="text-decoration-none fw-semibold"
+    >
+        <?= htmlspecialchars($agendamento['profissional_nome']) ?>
+    </a>
+
+<?php else: ?>
+
+    <a
+        href="alterar-profissional-agendamento.php?id=<?= $agendamento['id'] ?>"
+        class="text-danger text-decoration-none"
+    >
+        Selecionar profissional
+    </a>
+
+<?php endif; ?>
+
+</td>
+    <td>
+
+    <a
+        href="alterar-data-agendamento.php?id=<?= $agendamento['id'] ?>"
+        class="text-decoration-none fw-semibold"
+    >
+        <?= date(
+            'd/m/Y',
+            strtotime($agendamento['data_disponivel'])
+        ) ?>
+    </a>
+
+</td>
+
+<!-- HORÁRIO -->
+<td>
+
+    <a
+        href="#"
+        class="text-decoration-none fw-semibold"
+        data-bs-toggle="modal"
+        data-bs-target="#modalHorario<?= $agendamento['id'] ?>"
+    >
+        <?= substr($agendamento['horario'], 0, 5) ?>
+    </a>
+
+</td>
+
+<!-- PAGAMENTO -->
+<td>
+
+    <?php if($agendamento['status_pagamento'] == 'pago'): ?>
+            <span class="badge bg-success">
+                Pago
+            </span>
+
+        <?php else: ?>
+
+            <span class="badge bg-warning text-dark">
+                Pendente
+            </span>
+
+        <?php endif; ?>
+
+    </td>
+
+    <td>
+
+        <?php if($agendamento['status_agendamento'] == 'confirmado'): ?>
+
+            <span class="badge bg-success">
+                Confirmado
+            </span>
+
+        <?php elseif($agendamento['status_agendamento'] == 'cancelado'): ?>
+
+            <span class="badge bg-danger">
+                Cancelado
+            </span>
+
+        <?php elseif($agendamento['status_agendamento'] == 'concluido'): ?>
+
+            <span class="badge bg-primary">
+                Concluído
+            </span>
+
+        <?php else: ?>
+
+            <span class="badge bg-secondary">
+                Pendente
+            </span>
+
+        <?php endif; ?>
+
+    </td>
+
+</tr>
+
+<!-- MODAL CLIENTE -->
+<div
+    class="modal fade"
+    id="modalCliente<?= $agendamento['id'] ?>"
+    tabindex="-1"
+>
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    Informações do Cliente
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                ></button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <p>
+                    <strong>Nome:</strong><br>
+
+                    <?= htmlspecialchars(
+                        $agendamento['cliente_nome'] . ' ' .
+                        $agendamento['cliente_sobrenome']
+                    ) ?>
+                </p>
+
+                <p>
+                    <strong>Telefone:</strong><br>
+
+                    <?= htmlspecialchars(
+                        $agendamento['telefone']
+                    ) ?>
+                </p>
+
+                <p>
+                    <strong>E-mail:</strong><br>
+
+                    <?= htmlspecialchars(
+                        $agendamento['cliente_email']
+                    ) ?>
+                </p>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                >
+                    Fechar
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<?php endforeach; ?>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+
+<?php else: ?>
+
+    <div class="alert alert-warning">
+        Nenhum agendamento encontrado.
+    </div>
+
+<?php endif; ?>
+
+</div>
+
+</div>
 
         <!-- PROFISSIONAIS -->
         <div class="page d-none" id="profissionais">

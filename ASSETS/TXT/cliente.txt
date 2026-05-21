@@ -18,3 +18,22 @@ Vitória
 
 Data de Nascimento:
 02/01/2001
+
+-------------------------------------------------
+Primeiro Nome:
+Nicole
+
+Email:
+nicole@email.com
+
+Telefone:
+1198765434
+
+Senha:
+Nic#456*
+
+Sobrenome:
+Lopes
+
+Data de Nscimento:
+03/09/1998
