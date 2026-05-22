@@ -19,15 +19,15 @@ session_start();
 
 <body>
 <!-- BOTÃO VOLTAR -->
-<a href="../index.html" class="back-btn">
-    <i class="bi bi-arrow-left"></i>
+<a href="../index.html" class="back-btn" title="Voltar">
+    <i class="bi bi-arrow-left" title="voltar"></i>
 </a>
 
 <div class="login-container">
     <form class="login-form" action="autenticar-clinica.php" method="POST">
         <a href="painel-clinica.php">
             <div class="text-center mb-4">
-                <img src="../ASSETS/IMG/logo-cNomeFullSize.png" width="140">
+                <img src="../ASSETS/IMG/logo-cNomeFullSize.png" width="140" alt="Logo da marca. Desenho de um rosto visto lateralmente, com madeixas em formato de folhas na região dos cabelos. Abaixo, em letras maiúsculas, está escrito BRUMA.">
             </div>
         </a>
 
