@@ -1,0 +1,53 @@
+Tipo do Procedimento:
+Limpeza
+
+Nome comercial do serviço:
+Limpeza de Pele Facial
+
+Descrição:
+Higienização, esfoliação, extração de cravos, cauterização, aplicação de máscara calmante e hidratante e filtro solar.
+
+Quantidade de Sessões:
+1
+
+Valor (R$):
+180
+
+Duração (min.):
+40
+-------------------------------------------------------------------------------------------------------------
+Tipo de Procedimento:
+Botox
+
+Nome comercial do servico:
+Botox Ácido Hialurônico
+
+Descricao:
+Procedimento estético que suaviza linhas de expressão e rugas, proporcionando uma aparência mais jovem, leve e natural.
+
+Quantidade de Sessão:
+1
+
+Valor (R$):
+950
+
+Duração:
+80
+--------------------------------------------------------------------------------------------------------------
+Tipo do Procedimento:
+Peeling Químico
+
+Nome comercial do serviço:
+Peeling Facial Renovador
+
+Descrição:
+Aplicação de ácidos específicos para renovação celular, auxiliando na redução de manchas, acne, linhas finas e melhorando a textura da pele.
+
+Quantidade de Sessões:
+4
+
+Valor (R$):
+250
+
+Duração:
+80

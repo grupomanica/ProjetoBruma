@@ -1,0 +1,54 @@
+Tipo do Procedimento:
+Bioestimuladores de Colágeno
+
+Nome comercial do serviço:
+Bioestimulador Facial de Colágeno
+
+Descrição:
+Tratamento que estimula a produção natural de colágeno, promovendo firmeza, sustentação e rejuvenescimento da pele.
+
+Quantidade de Sessões:
+3
+
+Valor (R$):
+1800
+
+Duração:
+45
+-----------------------------------------------------------------------------------------------------------------------------------
+Tipo do Procedimento:
+Lipo Enzimática
+
+Nome comercial do serviço:
+Lipo Enzimática Corporal
+
+Descrição:
+Aplicação de enzimas que auxiliam na quebra de gordura localizada, ajudando na redução de medidas e definição corporal.
+
+Quantidade de Sessões:
+3
+
+Valor (R$):
+300
+
+Duração:
+30
+--------------------------------------------------------------------------------------------------------------------------
+Tipo do Procedimento:
+Drenagem Linfática
+
+Nome comercial do serviço:
+Drenagem Linfática Corporal
+
+Descrição:
+Massagem terapêutica que auxilia na eliminação de líquidos retidos, melhora a circulação e reduz o inchaço corporal.
+
+Quantidade de Sessões:
+1
+
+Valor (R$):
+120
+
+Duração:
+90
+-----------------------------------------------------------------------------------------------------------------------
