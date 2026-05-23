@@ -1,10 +1,10 @@
-el clínica<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="shortcut icon" href="ASSETS/IMG/favicon/logo-iconeFullSize.png" type="image/x-icon">
+    <link rel="shortcut icon" href="ASSETS/IMG/favicon/logo-iconeFullSize.png" alt="logo" type="image/x-icon">
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
@@ -21,7 +21,7 @@ el clínica<!DOCTYPE html>
     <div class="container border-bottom">
         <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between">
             <a href="#" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
-                <img src="ASSETS/IMG/logo-horizontal-roxo.png" class="bi me-2" width="150" role="img" aria-label="Bootstrap"/>
+    <img src="ASSETS/IMG/logo-horizontal-roxo.png" class="bi me-2" width="150" alt="Logo da plataforma Bruma">      
             </a>
             
             <!-- MANTER OCULTO ATÉ CORREÇÃO
@@ -34,20 +34,20 @@ el clínica<!DOCTYPE html>
 
             <div class="col-md-auto text-end d-flex align-items-center gap-3">
                 <!-- LINK PARA CLÍNICA -->
-                <a href="PHP/login-clinica.php" class="link-clinica">
+                <a href="PHP/login-clinica.php" class="link-clinica" aria-label="Acessar área da clínica">
                     Sou clínica
                 </a>
 
                 <!-- BOTÃO PRINCIPAL -->
                 <a href="PHP/login.php">
-                    <button type="button" class="btn btn-outline-bruma">
+                    <button type="button" class="btn btn-outline-bruma" aria-label="Entrar na plataforma">
                         Entrar
                     </button>
                 </a>
 
                 <!-- BOTÃO DE CADASTRO -->
                 <button type="button" class="btn btn-cadastro-bruma"
-                        data-bs-toggle="modal" data-bs-target="#modalCadastro">
+                        data-bs-toggle="modal" data-bs-target="#modalCadastro" aria-label="Abrir modal de cadastro">
                     Cadastrar
                 </button>
             </div>
@@ -58,7 +58,7 @@ el clínica<!DOCTYPE html>
     <!-- SEÇÃO SOBRE O BRUMA -->
     <section id="hero" class="hero d-flex align-items-center">
 
-        <video autoplay muted loop playsinline class="hero-video">
+       <video autoplay muted loop playsinline class="hero-video" aria-hidden="true">
             <source src="ASSETS/esthetician-pexels-gustavo-fring.mp4" type="video/mp4">
         </video>
 
@@ -75,7 +75,7 @@ el clínica<!DOCTYPE html>
                     localizar serviços próximos e agendar apenas clicando.
                 </p>
 
-                <button class="btn hero-btn fade-in delay-2" onclick="scrollToNext()">
+                <button class="btn hero-btn fade-in delay-2" onclick="scrollToNext()" aria-label="Explorar mais">
                     Explorar mais
                 </button>
             </div>
@@ -94,7 +94,7 @@ el clínica<!DOCTYPE html>
 
             <div class="col-md-4 fade-in delay-1">
                 <div class="benefit-card">
-                    <i class="fas fa-bolt"></i>
+                    <i class="fas fa-bolt" aria-hidden="true"></i>
                     <h5>Simples e rápido</h5>
                     <p>Agende em poucos passos, sem complicação.</p>
                 </div>
@@ -240,7 +240,7 @@ el clínica<!DOCTYPE html>
         <!-- HEADER -->
         <div class="modal-header border-0">
             <h5 class="modal-title fw-bold" id="modalCadastroLabel">Crie sua conta</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar janela"></button>
         </div>
 
         <!-- BODY -->
@@ -254,7 +254,10 @@ el clínica<!DOCTYPE html>
 
             <div class="row">
                 <div class="col-md-6 mb-3">
-                <label class="form-label">Primeiro nome</label>
+                <label for="nome" class="form-label">
+                        Primeiro nome
+                </label>
+
                 <input type="text" id="nome" name="nome" class="form-control" required>
                 </div>
 

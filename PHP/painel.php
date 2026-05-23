@@ -28,17 +28,31 @@ try {
     $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
         // BUSCAR AGENDAMENTOS DO USUÁRIO
     $stmtAgendamentos = $pdo->prepare("
-        SELECT 
-            a.*,
-            s.nome AS servico,
-            c.nome AS clinica
-        FROM agendamentos a
-        INNER JOIN servicos s ON a.servico_id = s.id
-        INNER JOIN clinicas c ON s.clinica_id = c.id
-        WHERE a.usuario_id = ?
-        ORDER BY a.data DESC, a.hora DESC
-    ");
+    SELECT 
+        a.status_agendamento,
 
+        s.nome AS servico,
+
+        c.nome AS clinica,
+
+        h.data_disponivel,
+        h.horario
+
+    FROM agendamentos a
+
+    INNER JOIN servicos s
+        ON a.servico_id = s.id
+
+    INNER JOIN clinicas c
+        ON a.clinica_id = c.id
+
+    INNER JOIN horarios_disponiveis h
+        ON a.horario_id = h.id
+
+    WHERE a.usuario_id = ?
+
+    ORDER BY h.data_disponivel DESC, h.horario DESC
+");
     $stmtAgendamentos->execute([$usuario_id]);
 
     $agendamentos = $stmtAgendamentos->fetchAll(PDO::FETCH_ASSOC);
@@ -46,6 +60,31 @@ try {
 } catch (Exception $e) {
     $usuario = [];
 }
+$favoritos = [];
+
+$stmtFavoritos = $pdo->prepare("
+
+    SELECT DISTINCT
+
+        c.nome,
+        c.email,
+        c.telefone,
+        c.bairro
+
+    FROM favoritos f
+
+    INNER JOIN clinicas c
+        ON c.id = f.clinica_id
+
+    WHERE f.usuario_id = ?
+
+");
+
+$stmtFavoritos->execute([
+    $usuario_id
+]);
+
+$favoritos = $stmtFavoritos->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -145,15 +184,15 @@ try {
             <div class="page d-none" id="agendamentos">
                 <h3>Meus agendamentos</h3>
                 <table class="table mt-3">
-                    <thead>
-                        <tr>
-                            <th>Clínica</th>
-                            <th>Serviço</th>
-                            <th>Data</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+<thead>
+     <tr>
+            <th>Clínica</th>
+            <th>Serviço</th>
+            <th>Data</th>
+            <th>Horário</th>
+            <th>Status</th>
+     </tr></thead>
+                  <tbody>
 
 <?php if(count($agendamentos) > 0): ?>
 
@@ -161,22 +200,58 @@ try {
 
         <tr>
 
+            <!-- Clínica -->
             <td>
                 <?= htmlspecialchars($agendamento['clinica']) ?>
             </td>
 
+            <!-- Serviço -->
             <td>
                 <?= htmlspecialchars($agendamento['servico']) ?>
             </td>
 
+            <!-- Data -->
             <td>
-                <?= date('d/m/Y', strtotime($agendamento['data'])) ?>
-                às
-                <?= substr($agendamento['hora'], 0, 5) ?>
+                <?= date(
+                    'd/m/Y',
+                    strtotime($agendamento['data_disponivel'])
+                ) ?>
             </td>
 
+            <!-- Horário -->
             <td>
-                <?= ucfirst($agendamento['status']) ?>
+                <?= substr($agendamento['horario'], 0, 5) ?>
+            </td>
+
+            <!-- Status -->
+            <td>
+
+                <?php if($agendamento['status_agendamento'] == 'confirmado'): ?>
+
+                    <span class="badge bg-success">
+                        Confirmado
+                    </span>
+
+                <?php elseif($agendamento['status_agendamento'] == 'cancelado'): ?>
+
+                    <span class="badge bg-danger">
+                        Cancelado
+                    </span>
+
+                <?php elseif($agendamento['status_agendamento'] == 'concluido'): ?>
+
+                    <span class="badge bg-primary">
+                        Concluído
+                    </span>
+
+                <?php else: ?>
+
+                    <span class="badge bg-secondary">
+                        Pendente
+                    </span>
+
+                <?php endif; ?>
+
             </td>
 
         </tr>
@@ -186,7 +261,9 @@ try {
 <?php else: ?>
 
     <tr>
-        <td colspan="4">Nenhum agendamento encontrado</td>
+        <td colspan="5">
+            Nenhum agendamento encontrado
+        </td>
     </tr>
 
 <?php endif; ?>
@@ -198,9 +275,49 @@ try {
             <!-- FAVORITOS -->
             <div class="page d-none" id="favoritos">
                 <h3>Clínicas favoritas</h3>
-                <div class="alert alert-secondary mt-3">
-                    Nenhuma clínica favoritada ainda
+                <?php if(count($favoritos) > 0): ?>
+
+    <div class="row mt-3">
+
+        <?php foreach($favoritos as $favorito): ?>
+
+            <div class="col-md-4 mb-3">
+
+                <div class="card shadow-sm p-3 h-100">
+
+                    <h5>
+                        <?= htmlspecialchars($favorito['nome']) ?>
+                    </h5>
+
+                    <p class="mb-1">
+                        <strong>Região:</strong>
+                        <?= htmlspecialchars($favorito['bairro']) ?>
+                    </p>
+
+                    <p class="mb-1">
+                        <strong>Telefone:</strong>
+                        <?= htmlspecialchars($favorito['telefone']) ?>
+                    </p>
+
+                    <p class="text-muted small">
+                        <?= htmlspecialchars($favorito['email']) ?>
+                    </p>
+
                 </div>
+
+            </div>
+
+        <?php endforeach; ?>
+
+    </div>
+
+<?php else: ?>
+
+    <div class="alert alert-secondary mt-3">
+        Nenhuma clínica favoritada ainda
+    </div>
+
+<?php endif; ?>
             </div>
 
             <!-- PERFIL -->
