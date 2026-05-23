@@ -18,16 +18,19 @@
 
 <body>
 <!-- BOTÃO VOLTAR -->
-<a href="../index.html" class="btn-voltar">
+<a href="../index.html" class="btn-voltar" aria-label="Voltar" aria-describedby="desc-voltar">
     <i class="bi bi-arrow-left"></i>
 </a>
+<span id="desc-voltar" class="visually-hidden">
+    Retorna para a página inicial do sistema.
+</span>
 
 <div class="login-container">
 
         <form class="login-form" action="autenticar.php" method="POST">
             <!-- LOGO -->
             <div class="text-center mb-4">
-                <a href="painel.php"><img src="../ASSETS/IMG/logo-cNomeFullSize.png" width="140"></a>
+                <a href="painel.php"><img src="../ASSETS/IMG/logo-cNomeFullSize.png" width="140"  alt=" Logo da Plataforma Bruma"></a>
             </div>
 
             <h3 class="text-center mb-3">Bem-vindo de volta</h3>
@@ -38,20 +41,22 @@
 
             <!-- Email -->
             <div class="input-group-custom">
-                <i class="bi bi-envelope"></i>
+                <i class="bi bi-envelope" aria-label="email"></i>
                 <input type="email" name="email" placeholder="E-mail do cliente" required>
             </div>
 
             <!--Senha-->
             <div class="input-group-custom">
-                <i class="bi bi-lock"></i>
+                <i class="bi bi-lock" aria-labelledby="senha"></i>
                 <input type="password" name="senha" placeholder="Senha" required>
             </div>
 
             <!-- Botão -->
-            <button type="submit" class="btn login-btn w-100">
+            <button type="submit" class="btn login-btn w-100"  aria-label="Entrar na página do cliente">
+                
                 Entrar
             </button>
+          
     </form>
 </div>
 
