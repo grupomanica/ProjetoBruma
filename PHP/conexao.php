@@ -3,7 +3,7 @@ function conectar() {
     $host = "localhost";
     $dbname = "sistemabruma";
     $user = "root";
-    $pass = "Sebrae@2026";
+    $pass = "";
 
     try {
         $pdo = new PDO(

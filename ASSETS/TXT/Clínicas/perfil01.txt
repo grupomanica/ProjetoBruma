@@ -15,7 +15,6 @@ grupomanica@email.com
 
 Senha:
 Manic4#grup0
-<<<<<<< HEAD:ASSETS/TXT/clínica.txt
 
 ---------------------------------------------------------------------------------
 CLÍNICA 
@@ -39,5 +38,3 @@ Senha:
 123Bell4#
 
 
-=======
->>>>>>> main:ASSETS/TXT/Clínicas/perfil01.txt
