@@ -1,0 +1,62 @@
+NOME:
+Felipe Augusto Moreira
+
+REGISTRO:
+554812
+
+Profissão:
+Enfermeiro Esteta
+
+TELEFONE:
+41996731159
+
+EMAIL:
+felipe.moreira.estetica@gmail.com
+
+Horário:
+14h às 23h
+
+Dias da semana:
+Quinta, Sexta, Sábado
+------------------------------------------
+Nome completo:
+Juliana Alves Martins
+
+Registro profissional:
+192834-F
+
+Profissão:
+Massoterapeuta
+
+Telefone:
+21998127745
+
+Email:
+juliana.martins.massagem@hotmail.com
+
+Horário:
+06h às 16h
+
+Dias da semana:
+Segunda, Terça, Quarta
+------------------------------------------
+Nome completo:
+Renata Souza Lima
+
+Registro profissional:
+78321
+
+Profissão:
+Esteticista
+
+Telefone:
+31991546680
+
+Email:
+renata.lima.estetica@outlook.com
+
+Horário:
+13h às 21h
+
+Dias da semana:
+Terça à Sábado

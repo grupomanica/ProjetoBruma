@@ -1,0 +1,53 @@
+Tipo do Procedimento:
+Microagulhamento
+
+Nome comercial do serviço:
+Microagulhamento Facial com Dermapen
+
+Descrição:
+Procedimento que estimula a produção de colágeno através de microperfurações, ajudando na redução de cicatrizes, manchas e sinais de envelhecimento.
+
+Quantidade de Sessões:
+3
+
+Valor (R$):
+350
+
+Duração (min)
+60
+------------------------------------------------------------------------------------------------------------------------
+Tipo do Procedimento:
+Harmonização Facial
+
+Nome comercial do serviço:
+Harmonização Facial Premium
+
+Descrição:
+Conjunto de procedimentos estéticos realizados para equilibrar os traços faciais, melhorar a simetria e valorizar a beleza natural.
+
+Quantidade de Sessões:
+1
+
+Valor (R$):
+2500
+
+Duração (min)
+45
+--------------------------------------------------------------------------------------------------------------------
+Tipo do Procedimento:
+Preenchimento Labial
+
+Nome comercial do serviço:
+Preenchimento Labial com Ácido Hialurônico
+
+Descrição:
+Procedimento que aumenta o volume, define o contorno e melhora a hidratação dos lábios, proporcionando um resultado natural e harmonioso.
+
+Quantidade de Sessões:
+1
+
+Valor (R$):
+1200
+
+Duração:
+30

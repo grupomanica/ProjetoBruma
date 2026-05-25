@@ -1,0 +1,62 @@
+NOME:
+Marina Melo
+
+REGISTRO:
+12.345
+
+ÁREA DE ATUAÇÃO:
+Esteticista
+
+TELEFONE:
+1124745604
+
+EMAIL:
+marina@email.com
+
+Horário de trabalho:
+08h às 18h
+
+Dias da Semana:
+Segunda, Quarta, Sexta e Sábado
+--------------------------------
+NOME:
+Camila Vasquez
+
+REGISTRO:
+987.654
+
+ÁREA DE ATUAÇÃO:
+Massagista
+
+TELEFONE:
+1134565890
+
+EMAIL:
+camila@email.com
+
+Horário de trabalho:
+05h às 15h
+
+Dias da Semana:
+Segunda à Sexta
+-----------------------
+NOME:
+Camila Fernanda Ribeiro
+
+REGISTRO:
+45871
+
+ÁREA DE ATUAÇÃO:
+Biomédica EstetaMassagista
+
+TELEFONE:
+11987452231
+
+EMAIL:
+camila.ribeiro.estetica@gmail.com
+
+Horário de trabalho:
+10h às 18h
+
+Dias da semana:
+Quarta, Quinta e Sexta

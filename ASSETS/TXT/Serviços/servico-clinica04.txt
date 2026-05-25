@@ -1,0 +1,18 @@
+Tipo do Procedimento: Criolipólise
+Nome comercial do serviço: Criolipólise Redutora
+Descrição: Procedimento não invasivo que utiliza baixas temperaturas para reduzir gordura localizada e auxiliar na definição corporal.
+Quantidade de Sessões: 1
+Valor (R$): 900
+------------------------------------------------------------------------------------------------------------------------------
+Tipo do Procedimento: Tratamento para Celulite
+Nome comercial do serviço: Tratamento Corporal Anti-Celulite
+Descrição: Procedimento estético voltado para reduzir celulites, melhorar a circulação e deixar a pele mais firme e uniforme.
+Quantidade de Sessões: 4
+Valor (R$): 220
+--------------------------------------------------------------------------------------------------------------------------------
+Tipo do Procedimento: Detox Corporal
+Nome comercial do serviço: Detox Corporal Relaxante
+Descrição: Tratamento corporal que auxilia na eliminação de toxinas, melhora a circulação e promove sensação de leveza e bem-estar.
+Quantidade de Sessões: 4
+Valor (R$): 180
+------------------------------------------------------------------------------------------------------------------------------
