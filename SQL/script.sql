@@ -149,6 +149,20 @@ CREATE TABLE agendamentos (
     REFERENCES horarios_disponiveis(id)
 );
 
+CREATE TABLE favoritos (
+
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    usuario_id INT NOT NULL,
+
+    clinica_id INT NOT NULL,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    UNIQUE(usuario_id, clinica_id)
+
+);
+
 SELECT * FROM usuarios;
 SELECT * FROM clinicas;
 SELECT senha FROM clinicas;

@@ -34,6 +34,20 @@ try {
 
     $servicos = $stmt->fetchAll();
 
+    $favoritos = [];
+
+$stmtFavoritos = $pdo->prepare("
+    SELECT clinica_id
+    FROM favoritos
+    WHERE usuario_id = ?
+");
+
+$stmtFavoritos->execute([
+    $_SESSION['usuario_id']
+]);
+
+$favoritos = $stmtFavoritos->fetchAll(PDO::FETCH_COLUMN);
+
 } catch (PDOException $e) {
 
     die("Erro ao buscar serviços: " . $e->getMessage());
@@ -165,92 +179,124 @@ try {
 
             <?php foreach($servicos as $row): ?>
 
-                <div class="col-md-4">
+         <div class="col-md-4">
 
-                    <div class="card shadow-sm h-100 p-3">
+    <div class="card shadow-sm h-100 p-3">
 
-                        <h5>
-                            <?= htmlspecialchars($row['nome']) ?>
-                        </h5>
+        <!-- FAVORITAR -->
+        <div class="d-flex justify-content-end mb-2">
 
-                        <p class="text-muted mb-1">
-                            <strong>Clínica:</strong>
-                            <?= htmlspecialchars($row['nome_clinica']) ?>
-                        </p>
+            <form action="favoritar.php" method="POST">
 
-                        <p>
-                            <?= htmlspecialchars($row['descricao']) ?>
-                        </p>
+                <input
+                    type="hidden"
+                    name="clinica_id"
+                    value="<?= $row['clinica_id'] ?>"
+                >
 
-                        <p>
-                            <strong>Região:</strong>
-                            <?= htmlspecialchars($row['bairro']) ?>
-                        </p>
+                <button
+                    type="submit"
+                    class="btn border-0 bg-transparent p-0"
+                >
 
-                        <p class="text-success fw-bold">
-                            A partir de R$
-                            <?= number_format($row['valor'], 2, ',', '.') ?>
-                        </p>
+<?php if(in_array($row['clinica_id'], $favoritos)): ?>
 
-                        <form action="agendamento.php" method="POST">
+                    <i class="bi bi-heart-fill text-danger fs-4"></i>
 
-                            <!-- IDs -->
-                            <input 
-                                type="hidden" 
-                                name="servico_id" 
-                                value="<?= $row['id'] ?>"
-                            >
+<?php else: ?>
 
-                            <input 
-                                type="hidden" 
-                                name="clinica_id" 
-                                value="<?= $row['clinica_id'] ?>"
-                            >
+                    <i class="bi bi-heart text-dark fs-4"></i>
 
-                            <input 
-                                type="hidden" 
-                                name="valor" 
-                                value="<?= $row['valor'] ?>"
-                            >
+<?php endif; ?>
 
-                            <input 
-    type="hidden" 
-    name="servico"
-    value="<?= $row['nome'] ?>"
->
+                </button>
 
-<input 
-    type="hidden" 
-    name="clinica"
-    value="<?= $row['nome_clinica'] ?>"
->
+            </form>
 
-<input 
-    type="hidden" 
-    name="endereco"
-    value="<?= $row['bairro'] ?>"
->
+        </div>
 
-                            <?php
+        <h5>
+            <?= htmlspecialchars($row['nome']) ?>
+        </h5>
 
-                            $stmtHorarios = $pdo->prepare("
-                                SELECT *
-                                FROM horarios_disponiveis
-                                WHERE servico_id = ?
-                                AND status = 'livre'
-                                AND data_disponivel >= CURDATE()
-                                ORDER BY data_disponivel ASC, horario ASC
-                            ");
+        <p class="text-muted mb-1">
+            <strong>Clínica:</strong>
+            <?= htmlspecialchars($row['nome_clinica']) ?>
+        </p>
 
-                            $stmtHorarios->execute([
-                                $row['id']
-                            ]);
+        <p>
+            <?= htmlspecialchars($row['descricao']) ?>
+        </p>
 
-                            $horarios = $stmtHorarios->fetchAll(PDO::FETCH_ASSOC);
+        <p>
+            <strong>Região:</strong>
+            <?= htmlspecialchars($row['bairro']) ?>
+        </p>
 
-                            ?>
+        <p class="text-success fw-bold">
+            A partir de R$
+            <?= number_format($row['valor'], 2, ',', '.') ?>
+        </p>
 
-                            <div class="horarios-box mb-3">
+        <form action="agendamento.php" method="POST">
+
+            <!-- IDs -->
+            <input 
+                type="hidden" 
+                name="servico_id" 
+                value="<?= $row['id'] ?>"
+            >
+
+            <input 
+                type="hidden" 
+                name="clinica_id" 
+                value="<?= $row['clinica_id'] ?>"
+            >
+
+            <input 
+                type="hidden" 
+                name="valor" 
+                value="<?= $row['valor'] ?>"
+            >
+
+            <input 
+                type="hidden" 
+                name="servico"
+                value="<?= $row['nome'] ?>"
+            >
+
+            <input 
+                type="hidden" 
+                name="clinica"
+                value="<?= $row['nome_clinica'] ?>"
+            >
+
+            <input 
+                type="hidden" 
+                name="endereco"
+                value="<?= $row['bairro'] ?>"
+            >
+
+<?php
+
+$stmtHorarios = $pdo->prepare("
+    SELECT *
+    FROM horarios_disponiveis
+    WHERE servico_id = ?
+    AND status = 'livre'
+    AND data_disponivel >= CURDATE()
+    ORDER BY data_disponivel ASC, horario ASC
+");
+
+$stmtHorarios->execute([
+    $row['id']
+]);
+
+$horarios = $stmtHorarios->fetchAll(PDO::FETCH_ASSOC);
+
+?>
+
+            <div class="horarios-box mb-3">
 
 <?php
 
@@ -265,99 +311,96 @@ foreach($horarios as $h){
 
 <?php if(count($datas) > 0): ?>
 
-    <?php foreach($datas as $data => $listaHorarios): ?>
+<?php foreach($datas as $data => $listaHorarios): ?>
 
-        <button
-            type="button"
-            class="btn btn-outline-primary mb-2"
-            data-bs-toggle="modal"
-            data-bs-target="#modal<?= md5($data . $row['id']) ?>"
+    <button
+        type="button"
+        class="btn btn-outline-primary mb-2"
+        data-bs-toggle="modal"
+        data-bs-target="#modal<?= md5($data . $row['id']) ?>"
+    >
+
+        <?= date('d/m/Y', strtotime($data)) ?>
+
+    </button>
+
+    <!-- MODAL -->
+    <div
+        class="modal fade"
+        id="modal<?= md5($data . $row['id']) ?>"
+        tabindex="-1"
+    >
+
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        Horários disponíveis
+                    </h5>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                    ></button>
+
+                </div>
+
+                <div class="modal-body">
+
+<?php foreach($listaHorarios as $horario): ?>
+
+    <div class="mb-2">
+
+        <input
+            type="radio"
+            class="btn-check"
+            name="horario"
+            value="<?= $horario['id'] ?>|<?= $horario['data_disponivel'] ?>|<?= $horario['horario'] ?>"
+            id="horario<?= $horario['id'] ?>"
+            required
         >
 
-            <?= date('d/m/Y', strtotime($data)) ?>
+        <label
+            class="btn btn-outline-dark w-100"
+            for="horario<?= $horario['id'] ?>"
+            onclick="
+                document.getElementById(
+                    'horarioSelecionado<?= md5($data . $row['id']) ?>'
+                ).innerHTML = 'Horário selecionado: <?= substr($horario['horario'], 0, 5) ?>';
 
-        </button>
+                bootstrap.Modal.getInstance(
+                    document.getElementById(
+                        'modal<?= md5($data . $row['id']) ?>'
+                    )
+                ).hide();
+            "
+        >
 
-        
-        <!-- MODAL -->
-<div
-    class="modal fade"
-    id="modal<?= md5($data . $row['id']) ?>"
-    tabindex="-1"
->
+            <?= substr($horario['horario'], 0, 5) ?>
 
-    <div class="modal-dialog">
-        <div class="modal-content">
+        </label>
 
-            <div class="modal-header">
-
-                <h5 class="modal-title">
-                    Horários disponíveis
-                </h5>
-
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                ></button>
-
-            </div>
-
-            <div class="modal-body">
-
-                <?php foreach($listaHorarios as $horario): ?>
-
-                    <div class="mb-2">
-
-                        <input
-                            type="radio"
-                            class="btn-check"
-        name="horario"
-value="<?= $horario['id'] ?>|<?= $horario['data_disponivel'] ?>|<?= $horario['horario'] ?>"
-                            id="horario<?= $horario['id'] ?>"
-                            
-                            required
-                        >
-
-                        <label
-                            class="btn btn-outline-dark w-100"
-                            for="horario<?= $horario['id'] ?>"
-                            onclick="
-                                document.getElementById(
-                                    'horarioSelecionado<?= md5($data . $row['id']) ?>'
-                                ).innerHTML = 'Horário selecionado: <?= substr($horario['horario'], 0, 5) ?>';
-                                
-                                bootstrap.Modal.getInstance(
-                                    document.getElementById(
-                                        'modal<?= md5($data . $row['id']) ?>'
-                                    )
-                                ).hide();
-                            "
-                        >
-
-                            <?= substr($horario['horario'], 0, 5) ?>
-
-                        </label>
-
-                    </div>
-
-                <?php endforeach; ?>
-
-            </div>
-
-        </div>
     </div>
 
-</div>
+<?php endforeach; ?>
 
-<!-- TEXTO MOSTRANDO HORÁRIO ESCOLHIDO -->
-<div
-    id="horarioSelecionado<?= md5($data . $row['id']) ?>"
-    class="small text-success mb-3"
->
-</div>
+                </div>
 
-    <?php endforeach; ?>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- TEXTO HORÁRIO -->
+    <div
+        id="horarioSelecionado<?= md5($data . $row['id']) ?>"
+        class="small text-success mb-3"
+    ></div>
+
+<?php endforeach; ?>
 
 <?php else: ?>
 
@@ -367,30 +410,17 @@ value="<?= $horario['id'] ?>|<?= $horario['data_disponivel'] ?>|<?= $horario['ho
 
 <?php endif; ?>
 
-</div>
+            </div>
 
+            <button type="submit" class="btn btn-primary w-100">
+                Agendar
+            </button>
 
+        </form>
 
+    </div>
 
-
-
-
-
-
-</select>
-
-    
-
-
-
-                            <button type="submit" class="btn btn-primary w-100">
-                                Agendar
-                            </button>
-
-                        </form>
-
-                    </div>
-                </div>
+</div>    
 
             <?php endforeach; ?>
 
