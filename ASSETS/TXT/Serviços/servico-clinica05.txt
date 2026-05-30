@@ -1,0 +1,55 @@
+Tipo do Procedimento:
+Carboxiterapia
+
+Nome comercial do serviço:
+Carboxiterapia Corporal
+
+Descrição:
+Procedimento à base de CO2 terapia que ajuda no combate às estrias, celulites, flacidez, gordura localizada e olheiras. 
+
+Quantidade de Sessões:
+5
+
+Valor (R$):
+429.00
+
+Duração (Minutos):
+40
+--------------------------------------------------
+Tipo do Procedimento:
+Fios de Sustentação
+
+Nome comercial do serviço:
+Foxy Eyes
+
+Descrição:
+Realizamos o procedimento de forma temporária, através de Fios de tração de PDO.
+São realizados na clínica sob anestesia local. Procedimento rápido e reversível.
+Outra forma mais definitiva de se conquistar esse olhar marcante, é através de cirurgias como a cantoplastia e reposicionamento de supercílios.
+
+Quantidade de Sessões:
+1
+
+Valor (R$):
+249,00
+
+Duração (Minutos):
+30
+--------------------------------------------------
+Tipo do Procedimento:
+Bichectomia
+
+Nome comercial do serviço:
+Bichectomia
+
+Descrição:
+A bichectomia é um procedimento cirúrgico que visa remover as bolsas de gordura da bochecha, proporcionando um contorno facial mais definido e estético. 
+
+Quantidade de Sessões:
+1
+
+Valor (R$):
+4149.00
+
+Duração (Minutos):
+80

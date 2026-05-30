@@ -1,0 +1,72 @@
+Nome:
+Nicholly Gonzaga
+
+Registro:
+895345
+
+Especialidade:
+Biomédica
+
+Telefone:
+1156903678
+
+Email:
+nicholly@email.com
+
+Horário
+08h às 15h
+
+Dias de trabalho
+Terça, Quarta, Quinta, Sexta, Sábado
+
+Status
+Ativo
+----------------------------------------------
+Nome:
+Gael Augusto Luís Porto
+
+Registro:
+127102
+
+Especialidade:
+Dermatologista
+
+Telefone:
+84987781331
+
+Email:
+gael-porto89@salera.com.br
+
+Horário
+08h às 15h
+
+Dias de trabalho
+Terça, Quarta, Quinta, Sexta, Sábado
+
+Status
+Ativo
+----------------------------------------------
+Nome:
+Hugo Enzo José Silva
+
+Registro:
+153057
+
+Especialidade:
+Dermatologista
+
+Telefone:
+84995933112
+
+Email:
+hugo_silva@cladm.com.br
+
+Horário
+05h às 14h
+
+Dias de trabalho
+Terça, Quarta, Quinta, Sexta, Sábado
+
+Status
+Ativo
+----------------------------------------------
