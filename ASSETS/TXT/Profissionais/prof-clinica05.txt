@@ -1,0 +1,77 @@
+Nome:
+Marina Beatriz Falcão
+
+Registro:
+CRBM 48291
+
+Especialidade:
+Biomédica Esteta
+
+Telefone:
+11987654321
+
+Email:
+marina.falcao@esteticaviva.com.br
+
+Horário
+08h às 15h
+
+Dias de trabalho
+Segunda, Terça, Quarta, Quinta, Sexta
+
+Status
+Ativo
+
+---
+
+Nome:
+Rafael Henrique Nogueira
+
+Registro:
+CRM 238745
+
+Especialidade:
+Dermatologista
+
+Telefone:
+11991234567
+
+Email:
+rafael.nogueira@clinicabelle.com.br
+
+Horário
+09h às 18h
+
+Dias de trabalho
+Segunda, Terça, Quinta, Sexta, Sábado
+
+Status
+Ativo
+
+---
+
+Nome:
+Lucas Gabriel Monteiro
+
+Registro:
+CRO 65432
+
+Especialidade:
+Harmonização Orofacial
+
+Telefone:
+11994567812
+
+Email:
+lucas.monteiro@primeface.com.br
+
+Horário
+10h às 19h
+
+Dias de trabalho
+Segunda, Quarta, Quinta, Sexta, Sábado
+
+Status
+Ativo
+
+---
