@@ -1,12 +1,14 @@
 <?php
 function conectar() {
+    //Definições de host, database, usuário e senha
     $host = "localhost";
     $dbname = "sistemabruma";
     $user = "root";
     $pass = "Sebrae@2026";
 
+    //Conecta ao banco de dados
     try {
-        $pdo = new PDO(
+        $pdo = new PDO( 
             "mysql:host=$host;dbname=$dbname;charset=utf8mb4",
             $user,
             $pass
