@@ -115,6 +115,15 @@
                         placeholder="Bairro"
                         readonly
                     >
+
+                    <select name="regiao" class="form-select" required>
+                        <option value="">Selecione a região</option>
+                        <option value="Centro">Centro</option>
+                        <option value="Norte">Zona Norte</option>
+                        <option value="Sul">Zona Sul</option>
+                        <option value="Leste">Zona Leste</option>
+                        <option value="Oeste">Zona Oeste</option>
+                    </select>
                 </div>
 
                 <div class="input-group-custom">
@@ -196,7 +205,6 @@
                     </button>
                 </div>
             </div>
-
         </form>
     </div>
 </body>

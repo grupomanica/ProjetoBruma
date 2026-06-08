@@ -20,6 +20,7 @@ CREATE TABLE clinicas (
     cep VARCHAR(10) NOT NULL,
     cidade VARCHAR(50) NOT NULL,
     bairro VARCHAR(50) NOT NULL,
+    regiao VARCHAR(20) NOT NULL DEFAULT 'Centro',
     logradouro VARCHAR(255),
     faixa_preco VARCHAR(50),
     email VARCHAR(100) UNIQUE,
@@ -69,13 +70,16 @@ CREATE TABLE horarios_disponiveis (
     horario TIME NOT NULL,
     status ENUM('livre', 'ocupado') DEFAULT 'livre',
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (clinica_id)
+    CONSTRAINT fk_horario_clinica
+        FOREIGN KEY (clinica_id)
         REFERENCES clinicas(id)
         ON DELETE CASCADE,
-    FOREIGN KEY (servico_id)
+    CONSTRAINT fk_horario_servico
+        FOREIGN KEY (servico_id)
         REFERENCES servicos(id)
         ON DELETE CASCADE
-);
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- AGENDAMENTOS
 CREATE TABLE agendamentos (
@@ -97,14 +101,19 @@ CREATE TABLE agendamentos (
         'cancelado'
     ) DEFAULT 'pendente',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
     FOREIGN KEY (usuario_id)
     REFERENCES usuarios(id),
+
     FOREIGN KEY (clinica_id)
     REFERENCES clinicas(id),
+
     FOREIGN KEY (servico_id)
     REFERENCES servicos(id),
+
     FOREIGN KEY (profissional_id)
     REFERENCES profissionais(id),
+
     FOREIGN KEY (horario_id)
     REFERENCES horarios_disponiveis(id)
 );
@@ -126,5 +135,7 @@ DROP DATABASE sistemaBruma;
 DROP TABLE agendamentos;
 DROP TABLE servicos;
 DROP TABLE clinicas;
+
+DROP TABLE horarios_disponiveis;
 
 DESCRIBE servicos;

@@ -6,6 +6,12 @@ document.addEventListener("DOMContentLoaded", function () {
     menuItems.forEach(item => {
 
         item.addEventListener("click", function (e) {
+
+            // Se não possui data-page, é um link normal
+            if (!this.dataset.page) {
+                return;
+            }
+
             e.preventDefault();
 
             // ativa menu
@@ -22,6 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (page) {
                 page.classList.remove("d-none");
             }
+
         });
 
     });

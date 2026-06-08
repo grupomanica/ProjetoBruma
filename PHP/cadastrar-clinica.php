@@ -12,6 +12,7 @@ try {
     $cep = preg_replace('/[^0-9]/', '', $_POST['cep']);
     $cidade = htmlspecialchars($_POST['cidade']);
     $bairro = htmlspecialchars($_POST['bairro']);
+    $regiao = $_POST['regiao'];
     $logradouro = htmlspecialchars($_POST['logradouro']);
 
     $faixa_preco = $_POST['faixa_preco'];
@@ -72,28 +73,30 @@ try {
         INSERT INTO clinicas (
             nome,
             cnpj,
-            telefone,
             cep,
             cidade,
             bairro,
+            regiao,
             logradouro,
             faixa_preco,
             email,
+            telefone,
             senha
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ");
 
     $sql->execute([
         $nome,
         $cnpj,
-        $telefone,
         $cep,
         $cidade,
         $bairro,
+        $regiao,
         $logradouro,
         $faixa_preco,
         $email,
+        $telefone,
         $senhaHash
     ]);
 

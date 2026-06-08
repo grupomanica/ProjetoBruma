@@ -1,84 +1,34 @@
 <?php
 session_start();
-require_once("conexao.php");
 
 if (!isset($_SESSION['clinica_id'])) {
     header("Location: login-clinica.php");
     exit();
 }
 
-$pdo = conectar();
-$clinica_id = $_SESSION['clinica_id'];
+require_once("conexao.php");
 
-if (!isset($_GET['id'])) {
+$pdo = conectar();
+
+$id = $_GET['id'] ?? 0;
+
+if (!$id){
+    die("Profissional inválido.");
+}
+
+$sql = "SELECT * FROM profissionais WHERE id = :id";
+
+$stmt = $pdo->prepare($sql);
+
+$stmt->execute([':id' => $id]);
+
+$profissional = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$profissional) {
     die("Profissional não encontrado.");
 }
 
-$id = (int) $_GET['id'];
-
-try {
-    $sql = "SELECT * FROM profissionais 
-            WHERE id = :id 
-            AND clinica_id = :clinica_id";
-
-    $stmt = $pdo->prepare($sql);
-
-    $stmt->execute([
-        ':id' => $id,
-        ':clinica_id' => $clinica_id
-    ]);
-
-    $profissional = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$profissional) {
-        die("Profissional não encontrado.");
-    }
-
-} catch (PDOException $e) {
-    die("Erro ao buscar profissional: " . $e->getMessage());
-}
-
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    $nome = trim($_POST['nome']);
-    $registro = trim($_POST['registro']);
-    $especialidade = trim($_POST['especialidade']);
-    $telefone = trim($_POST['telefone']);
-    $email = trim($_POST['email']);
-    $status = trim($_POST['status']);
-
-    try {
-        $sql = "UPDATE profissionais SET
-                    nome = :nome,
-                    registro = :registro,
-                    especialidade = :especialidade,
-                    telefone = :telefone,
-                    email = :email,
-                    status = :status
-                WHERE id = :id
-                AND clinica_id = :clinica_id";
-
-        $stmt = $pdo->prepare($sql);
-
-        $stmt->execute([
-            ':nome' => $nome,
-            ':registro' => $registro,
-            ':especialidade' => $especialidade,
-            ':telefone' => $telefone,
-            ':email' => $email,
-            ':status' => $status,
-            ':id' => $id,
-            ':clinica_id' => $clinica_id
-        ]);
-
-        header("Location: painel-clinica.php");
-        exit();
-
-    } catch (PDOException $e) {
-        die("Erro ao atualizar profissional: " . $e->getMessage());
-    }
-}
+$diasSelecionados = explode(',', $profissional['dias_semana']);
 ?>
 
 <!DOCTYPE html>
@@ -88,59 +38,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Editar Profissional</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="container mt-5">
 
+<body class="container mt-5">
     <h2>Editar Profissional</h2>
 
-    <form method="POST">
+    <form action="salvar-edicao-profissiona.php" method="POST">
 
-        <label class="form-label">Nome</label>
-        <input 
-            type="text"
-            name="nome"
-            class="form-control mb-3"
-            value="<?= htmlspecialchars($profissional['nome']) ?>"
-            required
-        >
+        <input type="hidden" name="id" value="<?= $profissional['id']?>">
+        
+        <!-- Nome -->
+        <label class="form-label">Nome completo</label>
+        <input type="text" name="nome" class="form-control mb-3"
+            value="<?= htmlspecialchars($profissional['nome']) ?>" required>
+        
+        <!-- Registro -->
+        <label class="form-label">Registro Profissional</label>
+        <input type="text" name="registro" class="form-control mb-3"
+            value="<?= htmlspecialchars($profissional['registro']) ?>" required>
 
-        <label class="form-label">Registro</label>
-        <input 
-            type="text"
-            name="registro"
-            class="form-control mb-3"
-            value="<?= htmlspecialchars($profissional['registro']) ?>"
-            required
-        >
-
+        <!-- Especialidade -->
         <label class="form-label">Especialidade</label>
-        <input 
-            type="text"
-            name="especialidade"
-            class="form-control mb-3"
-            value="<?= htmlspecialchars($profissional['especialidade']) ?>"
-            required
-        >
+        <input type="text" name="especialidade" class="form-control mb-3"
+            value="<?= htmlspecialchars($profissionais['especialidade']) ?>" required>
 
+        <!-- Telefone -->
         <label class="form-label">Telefone</label>
-        <input 
-            type="text"
-            name="telefone"
-            class="form-control mb-3"
-            value="<?= htmlspecialchars($profissional['telefone']) ?>"
-            required
-        >
+        <input type="text" name="telefone" class="form-control mb-3"
+            value="<?= htmlspecialchars($profissional['telefone']) ?>" required>
 
+        <!-- Email -->
         <label class="form-label">E-mail</label>
-        <input 
-            type="email"
-            name="email"
-            class="form-control mb-3"
-            value="<?= htmlspecialchars($profissional['email']) ?>"
-            required
-        >
+        <input type="email" name="email" class="form-control mb-3"
+            value="<?= htmlspecialchars($profissional['email']) ?>" required>
 
+        <!-- Horário -->
+         <label class="form-label">Horário de trabalho</label>
+         <div class="row mb-3">
+            <div class="col-6">
+                <input type="time" name="hora_inicio" class="form-control"
+                    value="<?= $profissional['hora_inicio'] ?>" required>
+            </div>
+
+            <div class="col-6">
+                <input type="time" name="hora_fim" class="form-control"
+                    value="<?= $profissional['hora_fim']?>" required>
+            </div>
+         </div>
+        
+        <!-- Dias -->
+         <label class="form-label"> Dias da semana</label>
+         <?php $dias = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo']; ?>
+         <div class="mb-3">
+            <?php foreach($dias as $dia): ?>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="dias_semana[]"
+                        value="<?= $dia ?>" <?= in_array($dia, $diasSelecionados) ? 'checked': '' ?>>
+                    <label class="form-check-label"><?= $dia ?></label>
+                </div>
+            <?php endforeach; ?>
+         </div>
+
+        <!-- Status -->
         <label class="form-label">Status</label>
-        <select name="status" class="form-control mb-3">
+        <select name="status" class="form-control mb-4" required>
             <option value="ativo" <?= $profissional['status'] == 'ativo' ? 'selected' : '' ?>>
                 Ativo
             </option>
@@ -149,16 +109,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 Inativo
             </option>
         </select>
+        
+        <div class="d-flex gap-2">
+            <a href="painel-clinica.php" class="btn btn-secondary">Voltar</a>
 
-        <button class="btn btn-success">
-            Salvar alterações
-        </button>
-
-        <a href="painel-clinica.php" class="btn btn-secondary">
-            Voltar
-        </a>
-
+            <button type="submit" class="btn btn-success">
+                Salvar alterações
+            </button>
+        </div>
     </form>
-
 </body>
 </html>

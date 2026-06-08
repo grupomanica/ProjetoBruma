@@ -10,6 +10,10 @@ require_once("conexao.php");
 
 $pdo = conectar();
 
+$servicoFiltro = $_GET['servico'] ?? '';
+$regiaoFiltro = $_GET['regiao'] ?? '';
+$precoFiltro = $_GET['preco'] ?? '';
+
 try {
 
     $sql = "
@@ -26,13 +30,58 @@ try {
         INNER JOIN clinicas c
             ON s.clinica_id = c.id
 
-        ORDER BY s.id DESC
+        WHERE 1=1
     ";
 
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
+    $params = [];
 
-    $servicos = $stmt->fetchAll();
+    //FILTRO SERVIÇO
+    if(!empty($servicoFiltro)){
+
+        $sql .= " AND s.tipo_procedimento = :servico";
+
+        $params[':servico'] = $servicoFiltro;
+    }
+
+    // FILTRO REGIÃO
+    if(!empty($regiaoFiltro)){
+
+        $sql .= " AND c.bairro = :regiao";
+
+        $params[':regiao'] = $regiaoFiltro;
+    }
+
+    // FILTRO PRECO
+    if(!empty($precoFiltro)){
+
+        if($precoFiltro == '100'){
+
+            $sql .= " AND s.valor <= 100";
+
+        } elseif($precoFiltro == '200'){
+            
+            $sql .= " AND s.valor > 100
+                    AND s.valor <= 200";
+
+        } elseif($precoFiltro == '400'){
+
+            $sql .= " AND s.valor > 200
+                        AND s.valor <= 400";
+
+        } elseif($precoFiltro == '999999'){
+
+            $sql .= " AND s.valor > 400";
+
+        }
+
+    }
+
+    $sql .= " ORDER BY s.id DESC";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+
+    $servicos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $favoritos = [];
 
@@ -47,6 +96,26 @@ $stmtFavoritos->execute([
 ]);
 
 $favoritos = $stmtFavoritos->fetchAll(PDO::FETCH_COLUMN);
+
+$stmtTipos = $pdo->prepare("
+    SELECT DISTINCT tipo_procedimento
+    FROM servicos
+    ORDER BY tipo_procedimento
+");
+
+$stmtTipos->execute();
+
+$tiposProcedimentos = $stmtTipos->fetchAll(PDO::FETCH_COLUMN);
+
+$stmtBairros = $pdo->prepare("
+    SELECT DISTINCT bairro
+    FROM clinicas
+    ORDER BY bairro
+");
+
+$stmtBairros->execute();
+
+$bairros = $stmtBairros->fetchAll(PDO::FETCH_COLUMN);
 
 } catch (PDOException $e) {
 
@@ -96,75 +165,88 @@ $favoritos = $stmtFavoritos->fetchAll(PDO::FETCH_COLUMN);
 <!-- FILTROS -->
 <section class="container filtros mt-4">
 
+<form method="GET">
+
     <div class="row g-3">
 
         <!-- filtro serviço -->
         <div class="col-md-4">
             <div class="filtro-box">
-
                 <i class="bi bi-stars"></i>
 
-                <select class="form-select">
-                    <option value="">Serviço</option>
-                    <option>Limpeza</option>
-                    <option>Botox</option>
-                    <option>Peeling Químico</option>
-                    <option>Microagulhamento</option>
-                    <option>Radiofrequência facial</option>
-                    <option>Skinbooster</option>
-                    <option>Harmonização facial</option>
-                    <option>Preenchimento Labial</option>
-                    <option>Bichectomia</option>
-                    <option>Bioestimuladores de colágeno</option>
-                    <option>Fios de sustentação</option>
-                    <option>Lipo enzimática</option>
-                    <option>Drenagem linfática</option>
-                    <option>Massagem modeladora</option>
-                    <option>Criolipólise</option>
-                    <option>Carboxiterapia</option>
-                    <option>Tratamento para celulite</option>
-                    <option>Detox corporal</option>
-                </select>
+                <select name="servico" class="form-select">
+                    <option value="">
+                        Todos os serviços
+                    </option>
+                    
+                    <?php foreach($tiposProcedimentos as $tipo): ?>
 
+                    <option
+                        value="<?= htmlspecialchars($tipo) ?>"
+                        <?= $servicoFiltro == $tipo ? 'selected' : '' ?>
+                    >
+                        <?= htmlspecialchars($tipo) ?>
+                    </option>
+
+                    <?php endforeach; ?>
+
+                </select>
             </div>
         </div>
-
-        <!-- filtro região -->
-        <div class="col-md-4">
+        
+        <!-- BAIRRO -->
+         <div class="col-md-4">
             <div class="filtro-box">
-
                 <i class="bi bi-geo-alt"></i>
 
-                <select class="form-select">
-                    <option value="">Região</option>
-                    <option>Central</option>
-                    <option>Norte</option>
-                    <option>Sul</option>
-                    <option>Leste</option>
-                    <option>Oeste</option>
-                </select>
+                <select name="regiao" class="form-select">
+                    <option value="">
+                        Todos os bairros
+                    </option>
 
+                    <?php foreach($bairros as $bairro): ?>
+
+                    <option
+                        value="<?= htmlspecialchars($bairro)?>"
+                        <?= $regiaoFiltro == $bairro ? 'selected' : '' ?>
+                    >
+                        <?= htmlspecialchars($bairro) ?>
+                    </option>
+
+                    <?php endforeach; ?>
+
+                </select>
             </div>
-        </div>
+         </div>
 
         <!-- filtro preço -->
         <div class="col-md-4">
             <div class="filtro-box">
-
                 <i class="bi bi-currency-dollar"></i>
 
-                <select class="form-select">
-                    <option value="">Preço</option>
-                    <option>Até R$100</option>
-                    <option>R$100 - R$200</option>
-                    <option>R$200 - R$400</option>
-                    <option>Acima de R$400</option>
+                <select name="preco" class="form-select">
+                    <option value="">Todos os preços</option>
+                    <option value="100">Até R$100</option>
+                    <option value="200">Até R$200</option>
+                    <option value="400">Até R$400</option>
+                    <option value="999999">Acima de R$400</option>
                 </select>
-
             </div>
         </div>
 
     </div>
+
+    <div class="mt-3">
+        <button class="btn btn-primary">
+            Filtrar
+        </button>
+
+        <a href="servicos.php" class="btn btn-outline-secondary">
+            Limpar
+        </a>
+    </div>
+
+</form>
 </section>
 
 <!-- LISTA DE SERVIÇOS -->
@@ -177,7 +259,6 @@ $favoritos = $stmtFavoritos->fetchAll(PDO::FETCH_COLUMN);
         <?php if(count($servicos) > 0): ?>
 
             <?php foreach($servicos as $row): ?>
-
          <div class="col-md-4">
 
     <div class="card shadow-sm h-100 p-3">
@@ -439,9 +520,5 @@ foreach($horarios as $h){
 
 </section>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-
-
-
 </body>
 </html>

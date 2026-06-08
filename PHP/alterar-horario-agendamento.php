@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 
 if (!isset($_SESSION['clinica_id'])) {
@@ -8,7 +7,6 @@ if (!isset($_SESSION['clinica_id'])) {
 }
 
 require_once("conexao.php");
-
 $pdo = conectar();
 
 $agendamento_id = $_POST['agendamento_id'] ?? null;
@@ -19,15 +17,10 @@ if (!$agendamento_id || !$horario_id) {
 }
 
 try {
-
     $sql = "
-
         UPDATE agendamentos
-
         SET horario_id = :horario_id
-
         WHERE id = :agendamento_id
-
     ";
 
     $stmt = $pdo->prepare($sql);
@@ -41,7 +34,5 @@ try {
     exit();
 
 } catch(PDOException $e) {
-
     die("Erro ao alterar horário.");
-
 }

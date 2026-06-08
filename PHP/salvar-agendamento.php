@@ -25,8 +25,7 @@ try {
     if(
         empty($servico_id) ||
         empty($clinica_id) ||
-        empty($horarioSelecionado) ||
-        empty($profissional_id)
+        empty($horarioSelecionado)
     ){
 
         die("Erro: dados do agendamento não enviados.");
@@ -86,6 +85,79 @@ $hora = $partes[2];
     }
 
     $valor = $servico['valor'];
+
+        if(empty($profissional_id)){
+
+    //Busca data e hora do horário escolhido
+    $sqlHorario = "
+        SELECT
+            data_disponivel,
+            horario,
+            clinica_id
+        FROM horarios_disponiveis
+        WHERE id = :horario_id
+    ";
+
+    $stmtHorario = $pdo->prepare($sqlHorario);
+
+    $stmtHorario->execute([
+        ':horario_id' => $horario_id
+    ]);
+
+    $horario = $stmtHorario->fetch(PDO::FETCH_ASSOC);
+
+    $dataAgendamento = $horario['data_disponivel'];
+
+    $horaAgendamento = $horario['horario'];
+
+    // Dias da semana
+    $diasSemana = [
+        'Domingo',
+        'Segunda',
+        'Terça',
+        'Quarta',
+        'Quinta',
+        'Sexta',
+        'Sábado'
+    ];
+
+    $diaSemana = $diasSemana[
+        date('w', strtotime($dataAgendamento))
+    ];
+
+    // Busca profissional disponível
+    $sqlProfissional = "
+    SELECT id
+    FROM profissionais
+    WHERE clinica_id = :clinica_id
+    AND status = 'ativo'
+    AND dias_semana LIKE :dia_semana
+    AND hora_inicio <= :hora_inicio
+    AND hora_fim >= :hora_fim
+    LIMIT 1
+";
+
+    $stmtProfissional = $pdo->prepare($sqlProfissional);
+
+    $stmtProfissional->execute([
+    ':clinica_id' => $horario['clinica_id'],
+    ':dia_semana' => '%' . $diaSemana . '%',
+    ':hora_inicio' => $horaAgendamento,
+    ':hora_fim' => $horaAgendamento
+]);
+
+    $profissional = $stmtProfissional->fetch(PDO::FETCH_ASSOC);
+
+    if($profissional){
+
+        $profissional_id = $profissional['id'];
+
+    } else {
+
+        die("Nenhum profissional disponível para este horário.");
+
+    }
+}
 
     // INSERT AGENDAMENTO
     $sql = "

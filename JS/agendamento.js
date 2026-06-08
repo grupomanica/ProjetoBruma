@@ -107,3 +107,32 @@ function copiarPix() {
 
     alert("PIX copiado!");
 }
+
+function atualizarProfissional(){
+
+    if(profissionalSelect.value === ''){
+        profissionalIdInput.value = '';
+        profissionalNomeInput.value = '';
+        return;
+    }
+
+    profissionalIdInput.value =
+        profissionalSelect.value;
+
+    profissionalNomeInput.value =
+        profissionalSelect.options[
+            profissionalSelect.selectedIndex
+        ].text;
+}
+
+function validarEtapa1(){
+
+    if(profissionalSelect.value === ''){
+
+        alert('Selecione um profissional.');
+
+        return;
+    }
+
+    nextStep();
+}

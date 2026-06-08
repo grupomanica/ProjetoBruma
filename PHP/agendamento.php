@@ -41,22 +41,9 @@
     $profissional_nome = $_POST['profissional_nome'] ?? '';
     $clinica_id = $_POST['clinica_id'] ?? 0;
 
-    //Busca todos os profissionais ativos da clínica escolhida
-    $sqlProfissionais = "
-        SELECT *
-        FROM profissionais
-        WHERE clinica_id = :clinica_id
-        AND status = 'ativo'
-        ORDER BY nome ASC
-    ";
-
-    //Uso de 'Prepared Statement' para previnir SQL Injection
-    $stmtProfissionais = $pdo->prepare($sqlProfissionais);
-    $stmtProfissionais->execute([
-        ':clinica_id' => $clinica_id
-    ]);
-
-    $profissionais = $stmtProfissionais->fetchAll(PDO::FETCH_ASSOC);
+    // Descobre dia da semana
+    $dataBanco = '';
+    $horaBanco = '';
 
     //Processamento do horário
     if (!empty($horarioSelecionado)) {
@@ -64,8 +51,53 @@
         list(
             $horarioId,
             $dataBanco,
-            $horaBanco) = explode('|', $horarioSelecionado);
-        //Formatação
+            $horaBanco) =
+            explode('|', $horarioSelecionado);
+    }
+
+    //Converte dia da semana
+    $diasSemana = [
+        'Sunday' => 'Domingo',
+        'Monday' => 'Segunda',
+        'Tuesday' => 'Terça',
+        'Wednesday' => 'Quarta',
+        'Thursday' => 'Quinta',
+        'Friday' => 'Sexta',
+        'Saturday' => 'Sábado'
+    ];
+
+    $diaSemanaIngles = date(
+    'l',
+    strtotime($dataBanco)
+    );
+
+    $diaSemana = $diasSemana[$diaSemanaIngles];
+
+    //Busca todos os profissionais ativos da clínica escolhida
+    $sqlProfissionais = "
+        SELECT *
+        FROM profissionais
+        WHERE clinica_id = :clinica_id
+        AND status = 'ativo'
+        AND dias_semana LIKE :dia_semana
+        AND hora_inicio <= :hora_inicio
+        AND hora_fim >= :hora_fim
+        ORDER BY nome ASC
+    ";
+
+    //Uso de 'Prepared Statement' para previnir SQL Injection
+    $stmtProfissionais = $pdo->prepare($sqlProfissionais);
+    $stmtProfissionais->execute([
+        ':clinica_id' => $clinica_id,
+        ':dia_semana' => '%' . $diaSemana . '%',
+        ':hora_inicio' => $horaBanco,
+        ':hora_fim' => $horaBanco
+    ]);
+
+    $profissionais = $stmtProfissionais->fetchAll(PDO::FETCH_ASSOC);
+
+    if (!empty($horarioSelecionado)) {
+        list($horarioId, $dataBanco, $horaBanco) = explode('|', $horarioSelecionado);
         $data = date('d/m/Y', strtotime($dataBanco));
         $hora = substr($horaBanco, 0, 5);
     } else {
@@ -75,6 +107,7 @@
 
     //Simulação de PIX
     $pix = "11999999999";
+    // Payload fake
     $payload = "BRUMA | $clinica | R$$valor | $data | $hora | $pix";
     //API que gera uma imagem QRCode
     $qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" . urlencode($payload);
@@ -144,7 +177,7 @@
                 </div>
 
                 <div class="text-end mt-4">
-                    <button class="btn next-btn" onclick="nextStep()" > Continuar </button>
+                    <button class="btn next-btn" onclick="validarEtapa1()" > Continuar </button>
                 </div>
             </div>
 
