@@ -255,10 +255,6 @@ if(count($agendamentos) > 0){
                                 <?= htmlspecialchars($agendamento['servico']) ?>
                             </td>
 
-                            <!-- Profissional -->
-                            <td>
-                                <?= htmlspecialchars($agendamento['profissional'])?>
-                            </td>
 
                             <!-- Data -->
                             <td>

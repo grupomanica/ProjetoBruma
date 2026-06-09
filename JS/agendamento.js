@@ -33,65 +33,58 @@ function prevStep() {
     showStep(currentStep);
 }
 
+/*function validarEtapa2(){
+            const nome = document.getElementById('nome');
+            const sobrenome = document.getElementById('sobrenome');
+            const dataNascimento = document.getElementById('dataNascimento');
+            const telefone = document.getElementById('telefone');
+
+            if(nome && nome.value.trim() === ''){
+                alert('Informe seu nome.');
+                return;
+            }
+
+            if(sobrenome && sobrenome.value.trim() === ''){
+                alert('Informe seu sobrenome.');
+                return;
+            }
+
+            if(dataNascimento && dataNascimento.value.trim() === ''){
+                alert('Informe sua data de nascimento.');
+                return;
+            }
+
+            if(telefone.value.trim() === ''){
+                alert('Informe seu telefone.');
+                return;
+            }
+
+            nextStep();
+        };*/
+
 function validarEtapa2(){
 
-    const nome =
-        document.getElementById('nome').value;
-
-    const sobrenome =
-        document.getElementById('sobrenome').value;
-
-    const telefone =
-        document.getElementById('telefone').value;
-
-    const dataNascimento =
-        document.getElementById('dataNascimento').value;
+    const sobrenomeCampo =
+        document.getElementById('sobrenome');
 
     if(
-        nome.trim() === '' ||
-        sobrenome.trim() === '' ||
-        telefone.trim() === '' ||
-        dataNascimento.trim() === ''
+        sobrenomeCampo &&
+        sobrenomeCampo.value.trim() === ''
     ){
-
-        alert('Preencha todos os campos.');
-
+        alert('Informe seu sobrenome.');
         return;
     }
 
-    // VALIDA IDADE
-    const hoje = new Date();
-
-    const nascimento = new Date(dataNascimento);
-
-    let idade =
-        hoje.getFullYear() -
-        nascimento.getFullYear();
-
-    const mes =
-        hoje.getMonth() -
-        nascimento.getMonth();
+    const dataNascimentoCampo =
+        document.getElementById('dataNascimento');
 
     if(
-        mes < 0 ||
-        (mes === 0 && hoje.getDate() < nascimento.getDate())
+        dataNascimentoCampo &&
+        dataNascimentoCampo.value.trim() === ''
     ){
-        idade--;
-    }
-
-    if(idade < 18){
-
-        alert(
-            'Você deve ser maior de idade para continuar o agendamento.'
-        );
-
+        alert('Informe sua data de nascimento.');
         return;
     }
-
-    // salva hidden
-    document.getElementById(
-        'dataNascimentoInput'
-    ).value = dataNascimento;
 
     nextStep();
 }
@@ -136,3 +129,84 @@ function validarEtapa1(){
 
     nextStep();
 }
+
+const profissionalSelect = document.getElementById('profissionalSelect');
+const profissionalIdInput = document.getElementById('profissionalIdInput');
+const profissionalNomeInput = document.getElementById('profissionalNomeInput');
+
+function atualizarProfissional(){
+    profissionalIdInput.value =
+        profissionalSelect.value;
+
+    profissionalNomeInput.value =
+        profissionalSelect.options[
+            profissionalSelect.selectedIndex
+        ].text;
+}
+
+atualizarProfissional();
+profissionalSelect.addEventListener(
+    'change',
+    atualizarProfissional
+);
+
+const campoDataNascimento = document.getElementById('dataNascimento');
+const inputHiddenNascimento = document.getElementById('dataNascimentoInput');
+
+campoDataNascimento.addEventListener('change', function(){
+    inputHiddenNascimento.value = this.value;
+});
+
+function validarDados(){
+const nome = document.querySelector('input[type="text"]').value;
+const sobrenome = document.querySelectorAll('input[type="text"]')[1].value;
+const telefone = document.getElementById('telefone').value;
+const dataNascimento = document.getElementById('dataNascimento').value;
+if(
+    nome.trim() === '' ||
+    sobrenome.trim() === '' ||
+    telefone.trim() === '' ||
+    dataNascimento.trim() === ''
+){
+    alert('Preencha todos os campos.');
+    return;
+}
+
+// VALIDA IDADE
+const hoje = new Date();
+const nascimento = new Date(dataNascimento);
+let idade = hoje.getFullYear() - nascimento.getFullYear();
+const mes = hoje.getMonth() - nascimento.getMonth();
+
+if( mes < 0 ||
+    (mes === 0 && hoje.getDate() < nascimento.getDate())
+){idade--;}
+
+if(idade < 18){
+    alert('Você precisa ser maior de 18 anos para continuar o agendamento.');
+    return;
+}
+
+// salva no hidden
+document.getElementById('dataNascimentoInput').value =
+    dataNascimento;
+// vai para próxima etapa
+nextStep();
+}
+
+function atualizarTelefone(){
+document.getElementById(
+    'telefoneHidden'
+).value = document.getElementById(
+    'telefone'
+).value;
+}
+
+document.getElementById(
+'telefone'
+).addEventListener(
+'input',
+atualizarTelefone
+);
+
+atualizarTelefone();

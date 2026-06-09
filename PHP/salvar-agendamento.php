@@ -218,7 +218,6 @@ $hora = $partes[2];
     echo "
         <script>
             alert('Agendamento realizado com sucesso!');
-            window.location.href='painel.php';
         </script>
     ";
 

@@ -204,7 +204,7 @@
                             <div class="form-control bg-light">
                                 <?= htmlspecialchars($usuario['sobrenome']) ?>
                             </div>
-                            <input type="hidden" name="sobrenome" value="<?= htmlspecialchars($usuario['sobrenome']) ?>">
+                            <input type="hidden" id="sobrenome" name="sobrenome" value="<?= htmlspecialchars($usuario['sobrenome']) ?>">
                         <?php else: ?>
                             <input
                                 type="text"
@@ -222,7 +222,7 @@
                             <div class="form-control bg-light">
                                 <?= date('d/m/Y',strtotime($usuario['data_nascimento'])) ?>
                             </div>
-                            <input type="hidden" name="data_nascimento" value="<?= $usuario['data_nascimento'] ?>">
+                            <input type="hidden" id="dataNascimento" name="data_nascimento" value="<?= $usuario['data_nascimento'] ?>">
 
                         <?php else: ?>
                             <input
@@ -332,123 +332,5 @@
             </div>
         </div>
     </section>
-    
-    <script>
-        const profissionalSelect = document.getElementById('profissionalSelect');
-        const profissionalIdInput = document.getElementById('profissionalIdInput');
-        const profissionalNomeInput = document.getElementById('profissionalNomeInput');
-
-        function atualizarProfissional(){
-            profissionalIdInput.value =
-                profissionalSelect.value;
-
-            profissionalNomeInput.value =
-                profissionalSelect.options[
-                    profissionalSelect.selectedIndex
-                ].text;
-        }
-
-        atualizarProfissional();
-        profissionalSelect.addEventListener(
-            'change',
-            atualizarProfissional
-        );
-    </script>
-
-    <script>
-        const campoDataNascimento = document.getElementById('dataNascimento');
-        const inputHiddenNascimento = document.getElementById('dataNascimentoInput');
-
-        campoDataNascimento.addEventListener('change', function(){
-            inputHiddenNascimento.value = this.value;
-        });
-    </script>
-
-    <script>
-        function validarDados(){
-            const nome = document.querySelector('input[type="text"]').value;
-            const sobrenome = document.querySelectorAll('input[type="text"]')[1].value;
-            const telefone = document.getElementById('telefone').value;
-            const dataNascimento = document.getElementById('dataNascimento').value;
-            if(
-                nome.trim() === '' ||
-                sobrenome.trim() === '' ||
-                telefone.trim() === '' ||
-                dataNascimento.trim() === ''
-            ){
-                alert('Preencha todos os campos.');
-                return;
-            }
-
-            // VALIDA IDADE
-            const hoje = new Date();
-            const nascimento = new Date(dataNascimento);
-            let idade = hoje.getFullYear() - nascimento.getFullYear();
-            const mes = hoje.getMonth() - nascimento.getMonth();
-
-            if( mes < 0 ||
-                (mes === 0 && hoje.getDate() < nascimento.getDate())
-            ){idade--;}
-
-            if(idade < 18){
-                alert('Você precisa ser maior de 18 anos para continuar o agendamento.');
-                return;
-            }
-
-            // salva no hidden
-            document.getElementById('dataNascimentoInput').value =
-                dataNascimento;
-            // vai para próxima etapa
-            nextStep();
-        }
-    </script>
-
-    <script>
-        function atualizarTelefone(){
-            document.getElementById(
-                'telefoneHidden'
-            ).value = document.getElementById(
-                'telefone'
-            ).value;
-        }
-
-        document.getElementById(
-            'telefone'
-        ).addEventListener(
-            'input',
-            atualizarTelefone
-        );
-
-        atualizarTelefone();
-
-        function validarEtapa2(){
-            const nome = document.getElementById('nome');
-            const sobrenome = document.getElementById('sobrenome');
-            const dataNascimento = document.getElementById('dataNascimento');
-            const telefone = document.getElementById('telefone');
-
-            if(nome && nome.value.trim() === ''){
-                alert('Informe seu nome.');
-                return;
-            }
-
-            if(sobrenome && sobrenome.value.trim() === ''){
-                alert('Informe seu sobrenome.');
-                return;
-            }
-
-            if(dataNascimento && dataNascimento.value.trim() === ''){
-                alert('Informe sua data de nascimento.');
-                return;
-            }
-
-            if(telefone.value.trim() === ''){
-                alert('Informe seu telefone.');
-                return;
-            }
-
-            nextStep();
-        };
-    </script>
 </body>
 </html>
