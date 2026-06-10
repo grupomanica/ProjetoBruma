@@ -1,6 +1,9 @@
 <?php
+
 session_start();
 require_once("conexao.php");
+
+header('Content-Type: application/json');
 
 $pdo = conectar();
 
@@ -10,13 +13,14 @@ $senha = $_POST['senha'] ?? '';
 try {
 
     $sql = "SELECT * FROM clinicas WHERE email = :email";
+
     $stmt = $pdo->prepare($sql);
 
     $stmt->execute([
         ':email' => $email
     ]);
 
-    $clinica = $stmt->fetch();
+    $clinica = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($clinica && password_verify($senha, $clinica['senha'])) {
 
@@ -26,13 +30,26 @@ try {
         $_SESSION['clinica_telefone'] = $clinica['telefone'];
         $_SESSION['clinica_cep'] = $clinica['cep'];
 
-        header("Location: painel-clinica.php");
-        exit();
+        echo json_encode([
+            "status" => "sucesso",
+            "mensagem" => "Login realizado com sucesso!",
+            "redirect" => "painel-clinica.php"
+        ]);
 
     } else {
-        echo "E-mail ou senha inválidos.";
+
+        echo json_encode([
+            "status" => "erro",
+            "mensagem" => "E-mail ou senha inválidos."
+        ]);
+
     }
 
 } catch(PDOException $e){
-    die("Erro no login: " . $e->getMessage());
+
+    echo json_encode([
+        "status" => "erro",
+        "mensagem" => "Erro interno do sistema."
+    ]);
+
 }

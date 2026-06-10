@@ -126,6 +126,17 @@ CREATE TABLE favoritos (
     UNIQUE(usuario_id, clinica_id)
 );
 
+CREATE TABLE historico_alteracoes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    clinica_id INT NOT NULL,
+    tipo VARCHAR(30) NOT NULL,
+    modulo VARCHAR(50) NOT NULL,
+    descricao TEXT NOT NULL,
+    data_hora DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (clinica_id)
+        REFERENCES clinicas(id)
+);
+
 SELECT * FROM usuarios;
 SELECT * FROM clinicas;
 SELECT senha FROM clinicas;

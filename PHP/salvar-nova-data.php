@@ -30,7 +30,121 @@ try {
 
     $agendamento = $stmtAtual->fetch(PDO::FETCH_ASSOC);
 
-    $horario_antigo = $agendamento['horario_id'];
+    $horario_antigo = $agendamento['horario_id'];   
+
+    // Buscar profissional atual do agendamento
+    $sqlProfissional = "
+
+        SELECT profissional_id
+
+        FROM agendamentos
+
+        WHERE id = :id
+
+    ";
+
+    $stmtProfissional = $pdo->prepare($sqlProfissional);
+
+    $stmtProfissional->execute([
+        ':id' => $agendamento_id
+    ]);
+
+    $dadosProfissional =
+        $stmtProfissional->fetch(PDO::FETCH_ASSOC);
+
+    $profissional_id =
+        $dadosProfissional['profissional_id'];
+
+    // Buscar informações do novo horário
+    $sqlNovoHorario = "
+
+        SELECT
+            data_disponivel,
+            horario
+
+        FROM horarios_disponiveis
+
+        WHERE id = :id
+
+    ";
+
+    $stmtNovoHorario =
+        $pdo->prepare($sqlNovoHorario);
+
+    $stmtNovoHorario->execute([
+        ':id' => $novo_horario_id
+    ]);
+
+    $novoHorario =
+        $stmtNovoHorario->fetch(PDO::FETCH_ASSOC);
+
+
+    // Descobrir dia da semana
+
+    $diasSemana = [
+
+        'Sunday' => 'Domingo',
+        'Monday' => 'Segunda',
+        'Tuesday' => 'Terça',
+        'Wednesday' => 'Quarta',
+        'Thursday' => 'Quinta',
+        'Friday' => 'Sexta',
+        'Saturday' => 'Sábado'
+
+    ];
+
+    $diaSemana =
+        $diasSemana[
+            date(
+                'l',
+                strtotime(
+                    $novoHorario['data_disponivel']
+                )
+            )
+        ];
+
+
+    // Verificar se profissional atende
+
+    $sqlValidacao = "
+
+        SELECT id
+
+        FROM profissionais
+
+        WHERE id = :profissional_id
+
+        AND status = 'ativo'
+
+        AND dias_semana LIKE :dia
+
+        AND hora_inicio <= :hora
+
+        AND hora_fim >= :hora
+
+    ";
+
+    $stmtValidacao =
+        $pdo->prepare($sqlValidacao);
+
+    $stmtValidacao->execute([
+
+        ':profissional_id' => $profissional_id,
+
+        ':dia' => '%' . $diaSemana . '%',
+
+        ':hora' => $novoHorario['horario']
+
+    ]);
+
+    if(!$stmtValidacao->fetch()){
+
+        die(
+            'O profissional atual não atende no novo dia e horário.'
+        );
+
+    }
+
 
     // Atualizar agendamento
     $sqlUpdate = "

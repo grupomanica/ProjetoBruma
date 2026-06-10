@@ -24,7 +24,7 @@ session_start();
 </a>
 
 <div class="login-container">
-    <form class="login-form" action="autenticar-clinica.php" method="POST">
+    <form id="login-clinica-form" class="login-form">
         <a href="painel-clinica.php">
             <div class="text-center mb-4">
                 <img src="../ASSETS/IMG/logo-cNomeFullSize.png" width="140">
@@ -49,6 +49,8 @@ session_start();
             placeholder="Senha" required>
         </div>
 
+        <div id="mensagem"></div><br>
+
         <button type="submit" class="btn login-btn w-100">
             Entrar
         </button>
@@ -60,6 +62,6 @@ session_start();
         </p>
     </form>
 </div>
-
+<script src="../JS/login-clinica.js"></script>
 </body>
 </html>

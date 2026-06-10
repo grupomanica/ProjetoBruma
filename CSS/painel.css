@@ -95,3 +95,7 @@ body {
 .btn-primary:hover{
     background-color: #9c15fc;
 }
+
+a{
+    text-decoration: none;
+}

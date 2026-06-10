@@ -36,18 +36,42 @@
         }
 
         // Buscar datas disponíveis
+        $profissional_id = $agendamento['profissional_id'];
+
         $sqlDatas = "
-            SELECT * FROM horarios_disponiveis
-            WHERE clinica_id = :clinica_id
-            AND status = 'livre'
-            ORDER BY data_disponivel ASC,
-                    horario ASC
+            SELECT
+                h.*
+            FROM horarios_disponiveis h,
+                profissionais p
+            WHERE p.id = :profissional_id
+
+            AND h.clinica_id = :clinica_id
+            AND h.status = 'livre'
+
+            AND (
+                CASE DAYOFWEEK(h.data_disponivel)
+                    WHEN 1 THEN p.dias_semana LIKE '%Domingo%'
+                    WHEN 2 THEN p.dias_semana LIKE '%Segunda%'
+                    WHEN 3 THEN p.dias_semana LIKE '%Terça%'
+                    WHEN 4 THEN p.dias_semana LIKE '%Quarta%'
+                    WHEN 5 THEN p.dias_semana LIKE '%Quinta%'
+                    WHEN 6 THEN p.dias_semana LIKE '%Sexta%'
+                    WHEN 7 THEN p.dias_semana LIKE '%Sábado%'
+                END
+            )
+
+            ORDER BY
+                h.data_disponivel ASC,
+                h.horario ASC
         ";
 
         $stmtDatas = $pdo->prepare($sqlDatas);
+
         $stmtDatas->execute([
-            ':clinica_id' => $clinica_id
+            ':clinica_id' => $clinica_id,
+            ':profissional_id' => $profissional_id
         ]);
+
         $datasDisponiveis = $stmtDatas->fetchAll(PDO::FETCH_ASSOC);
 
     } catch(PDOException $e) {

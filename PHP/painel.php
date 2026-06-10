@@ -34,6 +34,11 @@ try {
         s.nome AS servico,
 
         c.nome AS clinica,
+        c.email AS clinica_email,
+        c.telefone AS clinica_telefone,
+        c.bairro AS clinica_bairro,
+
+        p.nome AS profissional,
 
         h.data_disponivel,
         h.horario
@@ -231,11 +236,15 @@ if(count($agendamentos) > 0){
             <!-- AGENDAMENTOS -->
             <div class="page d-none" id="agendamentos">
                 <h3>Meus agendamentos</h3>
+                <div class="alert alert-info mt-3 mb-3" role="alert">
+                    <strong>Importante:</strong> Caso precise reagendar ou cancelar uma consulta, entre em contato diretamente com a clínica responsável pelo atendimento. O sistema Bruma não realiza alterações ou cancelamentos de agendamentos em nome dos clientes.
+                </div>
                 <table class="table mt-3">
                     <thead>
                         <tr>
                                 <th>Clínica</th>
                                 <th>Serviço</th>
+                                <th>Profissional</th>
                                 <th>Data</th>
                                 <th>Horário</th>
                                 <th>Status</th>
@@ -247,12 +256,28 @@ if(count($agendamentos) > 0){
                         <tr>
                             <!-- Clínica -->
                             <td>
-                                <?= htmlspecialchars($agendamento['clinica']) ?>
+                                <b><a href="#"
+                                class="abrir-clinica"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalClinica"
+
+                                data-nome="<?= htmlspecialchars($agendamento['clinica']) ?>"
+                                data-telefone="<?= htmlspecialchars($agendamento['clinica_telefone']) ?>"
+                                data-email="<?= htmlspecialchars($agendamento['clinica_email']) ?>"
+                                data-bairro="<?= htmlspecialchars($agendamento['clinica_bairro']) ?>"
+                                >
+                                    <?= htmlspecialchars($agendamento['clinica']) ?>
+                                </a></b>
                             </td>
 
                             <!-- Serviço -->
                             <td>
                                 <?= htmlspecialchars($agendamento['servico']) ?>
+                            </td>
+
+                            <!-- Profissional -->
+                            <td>
+                                <?= htmlspecialchars($agendamento['profissional']) ?>
                             </td>
 
 
@@ -295,7 +320,7 @@ if(count($agendamentos) > 0){
                         <?php else: ?>
 
                         <tr>
-                            <td colspan="5">
+                            <td colspan="6">
                                 Nenhum agendamento encontrado
                             </td>
                         </tr>
@@ -389,5 +414,51 @@ if(count($agendamentos) > 0){
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="modalClinica" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Informações da Clínica
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal">
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <p>
+                    <strong>Nome:</strong>
+                    <span id="clinicaNome"></span>
+                </p>
+
+                <p>
+                    <strong>Telefone:</strong>
+                    <span id="clinicaTelefone"></span>
+                </p>
+
+                <p>
+                    <strong>E-mail:</strong>
+                    <span id="clinicaEmail"></span>
+                </p>
+
+                <p>
+                    <strong>Bairro:</strong>
+                    <span id="clinicaBairro"></span>
+                </p>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

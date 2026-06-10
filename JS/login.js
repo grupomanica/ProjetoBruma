@@ -22,21 +22,42 @@ document.getElementById("login-form")
 
         if(resposta.status === "erro"){
 
-            mensagem.style.color = "#fa7c47",
+    mensagem.innerHTML = resposta.mensagem;
+
+    mensagem.style.color = "#fa7c47";
+    mensagem.style.fontWeight = "bold";
+
+        } else {
+
+            mensagem.style.color = "#fa7c47";
             mensagem.style.fontWeight = "bold";
 
-        } else{
+            let segundos = 3;
 
-            mensagem.style.color = "#fa7c47",
-            mensagem.style.fontWeight = "bold";
-          
-            setTimeout(() => {
+            mensagem.innerHTML = `
+                ${resposta.mensagem}
+                <br>
+                <small id="contador">
+                    Redirecionando em ${segundos}.
+                </small>
+            `;
 
-                window.location.href = resposta.redirect;
+            let contador = setInterval(() => {
 
-            }, 3000)
-        }
-    })
+                segundos--;
+
+                if(segundos > 0){
+                    document.getElementById("contador").innerHTML =
+                        `Redirecionando em ${segundos}`;
+                } else {
+                    clearInterval(contador);
+                        }
+                    }, 1000);
+                    setTimeout(() => {
+                        window.location.href = resposta.redirect;
+                    }, 3000);
+                }
+            })
 
     .catch(error => {
 

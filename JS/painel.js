@@ -34,3 +34,24 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 });
+
+//Script do modal de exibição dos dados da clínica
+document.querySelectorAll('.abrir-clinica').forEach(link => {
+
+    link.addEventListener('click', function() {
+
+        document.getElementById('clinicaNome').textContent =
+            this.dataset.nome;
+
+        document.getElementById('clinicaTelefone').textContent =
+            this.dataset.telefone;
+
+        document.getElementById('clinicaEmail').textContent =
+            this.dataset.email;
+
+        document.getElementById('clinicaBairro').textContent =
+            this.dataset.bairro;
+
+    });
+
+});

@@ -34,7 +34,7 @@ try {
         WHERE a.id = :id
     ";
 
-    $stmtAgendamento = pdo->prepare($sqlAgendamento);
+    $stmtAgendamento = $pdo->prepare($sqlAgendamento);
 
     $stmtAgendamento->execute([
         ':id' => $agendamento_id
@@ -71,7 +71,13 @@ try {
     $diaSemana = $diasSemana[$diaSemanaIngles];
 
     $sqlProfissionais = "
-        SELECT * FROM profissionais
+        SELECT
+            id,
+            nome,
+            dias_semana,
+            hora_inicio,
+            hora_fim
+        FROM profissionais
             WHERE clinica_id = :clinica_id
             AND status = 'ativo'
             AND dias_semana LIKE :dia_semana

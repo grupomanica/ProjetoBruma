@@ -14,30 +14,19 @@ $telefoneClinica = $_SESSION['clinica_telefone'] ?? '';
 $cepClinica = $_SESSION['clinica_cep'] ?? '';
 $clinica_id = $_SESSION['clinica_id'];
  
- 
- 
- 
 require_once("conexao.php");
- 
 $pdo = conectar();
- 
-$clinica_id = $_SESSION['clinica_id'];
  
 try {
     $sql = "SELECT * FROM servicos WHERE clinica_id = :clinica_id";
- 
     $stmt = $pdo->prepare($sql);
- 
     $stmt->execute([
         ':clinica_id' => $clinica_id
     ]);
- 
     $servicos = $stmt->fetchAll();
- 
 } catch (PDOException $e) {
     die("Erro ao buscar serviços: " . $e->getMessage());
 }
- 
 try {
     $sqlProfissionaisAtivos = "
         SELECT COUNT(*) as total_profissionais
@@ -47,19 +36,15 @@ try {
     ";
  
     $stmtProfissionaisAtivos = $pdo->prepare($sqlProfissionaisAtivos);
- 
     $stmtProfissionaisAtivos->execute([
         ':clinica_id' => $clinica_id
     ]);
  
     $resultadoProfissionais = $stmtProfissionaisAtivos->fetch(PDO::FETCH_ASSOC);
- 
     $totalProfissionaisAtivos = $resultadoProfissionais['total_profissionais'];
- 
 } catch (PDOException $e) {
     $totalProfissionaisAtivos = 0;
 }
-   
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -67,6 +52,9 @@ try {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
  
+<link rel="shortcut icon" href="../ASSETS/IMG/favicon/logo-iconeFullSize.png" alt="logo" type="image/x-icon">
+
+
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
  
@@ -105,6 +93,10 @@ try {
         <i class="bi bi-people"></i> Profissionais
     </a>
  
+    <a href="#" class="menu-item" data-page="historico">
+        <i class="bi bi-clock-history"></i> Histórico
+    </a>
+
     <a href="#" class="menu-item" data-page="perfil">
         <i class="bi bi-gear"></i> Perfil
     </a>
@@ -175,34 +167,87 @@ try {
                 </button>
             </div>
  
-            <?php if (count($servicos) > 0): ?>
- 
-                <div class="row">
-                    <?php foreach ($servicos as $servico): ?>
-                        <div class="col-md-4 mb-3">
-                            <div class="card p-3 shadow-sm">
- 
-                                <h5><?= htmlspecialchars($servico['nome']) ?></h5>
- 
-                                <p class="text-muted small">
-                                    <?= htmlspecialchars($servico['descricao']) ?>
-                                </p>
- 
-                                <p>
-                                    <strong>Duração:</strong>
-                                    <?= $servico['duracao'] ?> min
-                                </p>
- 
-                                <p class="text-success fw-bold">
-                                    R$ <?= number_format($servico['valor'], 2, ',', '.') ?>
-                                </p>
- 
+                <?php if (count($servicos) > 0): ?>
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+
+                            <div class="table-responsive">
+                                <table class="table align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th>Serviço</th>
+                                            <th>Descrição</th>
+                                            <th>Sessões</th>
+                                            <th>Duração</th>
+                                            <th>Valor</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <?php foreach ($servicos as $servico): ?>
+                                            <tr>
+                                                <td>
+                                                    <strong>
+                                                        <?= htmlspecialchars($servico['nome']) ?>
+                                                    </strong>
+                                                </td>
+                                                <td>
+                                                    <?= htmlspecialchars($servico['descricao']) ?>
+                                                </td>
+                                                <td>
+                                                    <?= $servico['sessoes'] ?>
+                                                </td>
+                                                <td>
+                                                    <?= $servico['duracao'] ?> min
+                                                </td>
+                                                <td class="text-success fw-bold">
+                                                    R$ <?= number_format($servico['valor'], 2, ',', '.') ?>
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex gap-2">
+                                                        <button
+                                                            type="button"
+                                                            class="btn btn-sm btn-warning btn-editar-servico"
+                                                            data-id="<?= $servico['id'] ?>"
+                                                        >
+                                                            <i class="bi bi-pencil"></i>
+                                                        </button>
+
+                                                        <a
+                                                            href="remover-servico.php?id=<?= $servico['id'] ?>"
+                                                            class="btn btn-sm btn-danger"
+                                                            onclick="return confirm('Deseja remover este serviço?')"
+                                                        >
+                                                            <i class="bi bi-trash"></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-                    <?php endforeach; ?>
-                </div>
- 
-            <?php else: ?>
+                    </div>
+
+                    <div
+                        id="area-edicao-servico"
+                        class="card shadow-sm mt-4 d-none"
+                    >
+                        <div class="card-body">
+
+                            <h5 class="mb-3">
+                                Editar Serviço
+                            </h5>
+
+                            <div id="conteudo-edicao-servico">
+                            </div>
+
+                        </div>
+                    </div>
+
+                <?php else: ?>
  
                 <div class="alert alert-warning">
                     Nenhum serviço cadastrado ainda.
@@ -243,6 +288,7 @@ try {
  
     LEFT JOIN agendamentos a
         ON a.horario_id = h.id
+        AND a.status_agendamento !='cancelado'
  
     WHERE h.clinica_id = :clinica_id
  
@@ -436,6 +482,10 @@ try {
  
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h3>Agendamentos</h3>
+    </div>
+
+    <div class="alert alert-warning mb-4" role="alert">
+    <strong>Importante:</strong> Caso seja necessário alterar a data, o horário ou o profissional de um agendamento, recomendamos que a clínica comunique o cliente o mais breve possível. As alterações realizadas no sistema são registradas normalmente, porém o Bruma não envia avisos ou notificações automáticas aos clientes sobre essas mudanças.
     </div>
  
 <?php
@@ -882,9 +932,6 @@ $horariosDisponiveis = $stmtHorariosDisponiveis->fetchAll(PDO::FETCH_ASSOC);
     </div>
  
 <?php endif; ?>
- 
-</div>
- 
 </div>
  
         <!-- PROFISSIONAIS -->
@@ -1195,6 +1242,199 @@ $horariosDisponiveis = $stmtHorariosDisponiveis->fetchAll(PDO::FETCH_ASSOC);
                 </div>
             </div>
         </div>
+
+
+        <!-- HISTÓRICO DE ALTERAÇÕES -->
+        <div class="page d-none" id="historico">
+
+            <h3>Histórico de Alterações</h3>
+
+        <?php
+
+        $pagina = isset($_GET['pagina'])
+            ? (int)$_GET['pagina']
+            : 1;
+
+        $limite = 15;
+
+        $offset = ($pagina - 1) * $limite;
+
+        $sqlHistorico = "
+            SELECT *
+            FROM historico_alteracoes
+            WHERE clinica_id = :clinica_id
+            ORDER BY data_hora DESC
+            LIMIT :limite
+            OFFSET :offset
+        ";
+
+        $stmtHistorico = $pdo->prepare($sqlHistorico);
+
+        $stmtHistorico->bindValue(
+            ':clinica_id',
+            $clinica_id,
+            PDO::PARAM_INT
+        );
+
+        $stmtHistorico->bindValue(
+            ':limite',
+            $limite,
+            PDO::PARAM_INT
+        );
+
+        $stmtHistorico->bindValue(
+            ':offset',
+            $offset,
+            PDO::PARAM_INT
+        );
+
+        $stmtHistorico->execute();
+
+        $historicos = $stmtHistorico->fetchAll(
+            PDO::FETCH_ASSOC
+        );
+        ?>
+
+        <?php if(count($historicos) > 0): ?>
+
+        <div class="card shadow-sm">
+        <div class="card-body">
+
+        <table class="table">
+
+        <thead>
+        <tr>
+            <th>Data/Hora</th>
+            <th>Tipo</th>
+            <th>Módulo</th>
+            <th>Descrição</th>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        <?php foreach($historicos as $item): ?>
+
+        <tr>
+
+        <td>
+        <?= date(
+            'd/m/Y H:i',
+            strtotime($item['data_hora'])
+        ) ?>
+        </td>
+
+        <td>
+
+        <?php if($item['tipo'] == 'Inclusão'): ?>
+
+        <span class="badge bg-success">
+            Inclusão
+        </span>
+
+        <?php elseif($item['tipo'] == 'Edição'): ?>
+
+        <span class="badge bg-warning text-dark">
+            Edição
+        </span>
+
+        <?php else: ?>
+
+        <span class="badge bg-danger">
+            Exclusão
+        </span>
+
+        <?php endif; ?>
+
+        </td>
+
+        <td>
+        <?= htmlspecialchars($item['modulo']) ?>
+        </td>
+
+        <td>
+        <?= htmlspecialchars($item['descricao']) ?>
+        </td>
+
+        </tr>
+
+        <?php endforeach; ?>
+
+        </tbody>
+
+        </table>
+
+        <?php
+            $sqlTotal = "
+                SELECT COUNT(*) total
+                FROM historico_alteracoes
+                WHERE clinica_id = :clinica_id
+            ";
+
+            $stmtTotal = $pdo->prepare($sqlTotal);
+
+            $stmtTotal->execute([
+                ':clinica_id' => $clinica_id
+            ]);
+
+            $totalRegistros = $stmtTotal->fetchColumn();
+
+            $totalPaginas = ceil(
+                $totalRegistros / $limite
+            );
+
+            ?>
+
+            <nav class="mt-3">
+
+            <ul class="pagination">
+
+            <?php if($pagina > 1): ?>
+
+            <li class="page-item">
+
+            <a
+                class="page-link"
+                href="?pagina=<?= $pagina - 1 ?>"
+            >
+                Anterior
+            </a>
+
+            </li>
+
+            <?php endif; ?>
+
+            <?php if($pagina < $totalPaginas): ?>
+
+            <li class="page-item">
+
+            <a
+                class="page-link"
+                href="?pagina=<?= $pagina + 1 ?>"
+            >
+                Próxima
+            </a>
+
+            </li>
+
+            <?php endif; ?>
+
+            </ul>
+
+            </nav>
+
+        </div>
+        </div>
+
+        <?php else: ?>
+
+        <div class="alert alert-info">
+            Nenhuma alteração registrada.
+        </div>
+
+        <?php endif; ?>
+
+        </div>
  
         <!-- PERFIL -->
         <div class="page d-none" id="perfil">
@@ -1347,6 +1587,7 @@ $horariosDisponiveis = $stmtHorariosDisponiveis->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 </div>
+
  
 </body>
 </html>

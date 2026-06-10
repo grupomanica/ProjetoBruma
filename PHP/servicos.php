@@ -17,7 +17,7 @@ $precoFiltro = $_GET['preco'] ?? '';
 try {
 
     $sql = "
-        SELECT 
+        SELECT DISTINCT 
             s.id,
             s.nome,
             s.descricao,
@@ -30,7 +30,11 @@ try {
         INNER JOIN clinicas c
             ON s.clinica_id = c.id
 
-        WHERE 1=1
+        INNER JOIN horarios_disponiveis h
+            ON h.servico_id = s.id
+
+        WHERE h.status = 'livre'
+        AND h.data_disponivel >= CURDATE()
     ";
 
     $params = [];
