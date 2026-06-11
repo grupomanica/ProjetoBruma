@@ -20,27 +20,27 @@ document.getElementById("login-form")
 
         mensagem.innerHTML = resposta.mensagem;
 
-        if(resposta.status === "erro"){
+        if (resposta.status === "erro") {
 
-    mensagem.innerHTML = resposta.mensagem;
+    mensagem.innerHTML = `
+        <div class="alert alert-danger">
+            ${resposta.mensagem}
+        </div>
+    `;
 
-    mensagem.style.color = "#fa7c47";
-    mensagem.style.fontWeight = "bold";
+} else {
 
-        } else {
+    let segundos = 3;
 
-            mensagem.style.color = "#fa7c47";
-            mensagem.style.fontWeight = "bold";
-
-            let segundos = 3;
-
-            mensagem.innerHTML = `
-                ${resposta.mensagem}
-                <br>
-                <small id="contador">
-                    Redirecionando em ${segundos}.
-                </small>
-            `;
+    mensagem.innerHTML = `
+        <div class="alert alert-success">
+            ${resposta.mensagem}
+            <br>
+            <small id="contador">
+                Redirecionando em ${segundos}s...
+            </small>
+        </div>
+    `;
 
             let contador = setInterval(() => {
 

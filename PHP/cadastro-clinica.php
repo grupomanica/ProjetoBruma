@@ -22,8 +22,7 @@
     </a>
 
     <div class="cadastro-container">
-        <form class="cadastro-form" action="cadastrar-clinica.php" method="POST">
-
+<form id="formCadastroClinica" class="cadastro-form" action="cadastrar-clinica.php" method="POST" novalidate>
             <!-- LOGO -->
             <div class="text-center mb-3">
                 <img src="../ASSETS/IMG/logo-cNomeFullSize.png" width="100">
@@ -205,6 +204,7 @@
                     </button>
                 </div>
             </div>
+            <div id="mensagemCadastroClinica" class="mt-3"></div>
         </form>
     </div>
 </body>

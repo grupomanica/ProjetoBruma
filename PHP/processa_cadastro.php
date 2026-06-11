@@ -1,5 +1,8 @@
-<?php 
+<?php
+
 require_once("conexao.php");
+
+header('Content-Type: application/json');
 
 try {
 
@@ -25,25 +28,26 @@ try {
     // Validação
     if (!$nome || !$email || !$senha) {
 
-        throw new Exception(
-            "Preencha todos os campos corretamente"
-        );
+        echo json_encode([
+            "sucesso" => false,
+            "tipo" => "danger",
+            "mensagem" => "Preencha todos os campos corretamente."
+        ]);
 
+        exit;
     }
 
+    // Senhas diferentes
     if ($senha !== $confirmar) {
 
-        throw new Exception(
-            "As senhas não coincidem"
-        );
+        echo json_encode([
+            "sucesso" => false,
+            "tipo" => "danger",
+            "mensagem" => "As senhas não coincidem."
+        ]);
 
+        exit;
     }
-
-    // Criptografia
-    $senhaHash = password_hash(
-        $senha,
-        PASSWORD_DEFAULT
-    );
 
     // Verificar email duplicado
     $sql = $pdo->prepare(
@@ -54,11 +58,20 @@ try {
 
     if ($sql->rowCount() > 0) {
 
-        throw new Exception(
-            "Email já cadastrado"
-        );
+        echo json_encode([
+            "sucesso" => false,
+            "tipo" => "danger",
+            "mensagem" => "Este e-mail já está cadastrado."
+        ]);
 
+        exit;
     }
+
+    // Criptografia
+    $senhaHash = password_hash(
+        $senha,
+        PASSWORD_DEFAULT
+    );
 
     // Inserir usuário
     $sql = $pdo->prepare("
@@ -67,7 +80,7 @@ try {
             email,
             telefone,
             senha
-        ) 
+        )
         VALUES (?, ?, ?, ?)
     ");
 
@@ -78,12 +91,20 @@ try {
         $senhaHash
     ]);
 
-    header("Location: login.php");
+    echo json_encode([
+        "sucesso" => true,
+        "tipo" => "success",
+        "mensagem" => "Cadastro realizado com sucesso! Redirecionando para o login..."
+    ]);
 
     exit;
 
 } catch (Exception $e) {
 
-    echo $e->getMessage();
+    echo json_encode([
+        "sucesso" => false,
+        "tipo" => "danger",
+        "mensagem" => $e->getMessage()
+    ]);
 
 }

@@ -24,12 +24,11 @@ const prevBtns = document.querySelectorAll(".prev-btn");
 let currentStep = 0;
 
 function updateSteps() {
+
     steps.forEach((step, i) => {
         step.classList.toggle("active", i === currentStep);
     });
 
-    const progress = ((currentStep + 1) / steps.length) * 100;
-    progressBar.style.width = progress + "%";
 }
 
 // avançar
@@ -54,3 +53,77 @@ prevBtns.forEach(btn => {
 
 // iniciar
 updateSteps();
+// CADASTRO VIA AJAX
+
+const form = document.getElementById("formCadastroClinica");
+
+if (form) {
+
+    form.addEventListener("submit", function (e) {
+
+        e.preventDefault();
+
+        const mensagem = document.getElementById("mensagemCadastroClinica");
+
+        const campos = form.querySelectorAll("input, select");
+
+    let vazio = false;
+
+    campos.forEach(campo => {
+        if (!campo.value.trim()) {
+            vazio = true;
+        }
+    });
+
+    if (vazio) {
+
+        mensagem.innerHTML = `
+            <div class="alert alert-danger">
+                Todos os campos devem ser preenchidos.
+            </div>
+        `;
+
+        return;
+    }
+
+        const dados = new FormData(this);
+
+        fetch("cadastrar-clinica.php", {
+            method: "POST",
+            body: dados
+        })
+        .then(response => response.json())
+        .then(data => {
+
+            mensagem.innerHTML = `
+                <div class="alert alert-${data.tipo}">
+                    ${data.mensagem}
+                </div>
+            `;
+
+            if (data.sucesso) {
+
+                form.reset();
+
+                setTimeout(() => {
+                    window.location.href = "login-clinica.php";
+                }, 2500);
+
+            }
+
+        })
+        .catch(error => {
+
+            console.error(error);
+
+            mensagem.innerHTML = `
+                <div class="alert alert-danger">
+                    Erro ao processar cadastro.
+                </div>
+            `;
+
+        });
+
+    });
+
+}
