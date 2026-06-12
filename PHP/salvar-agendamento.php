@@ -21,6 +21,8 @@ try {
     $profissional_id = $_POST['profissional_id'] ?? '';
     $dataNascimento = $_POST['data_nascimento'] ?? '';
 
+    $formaPagamento = $_POST['forma_pagamento'] ?? 'pix';
+
     // VALIDA CAMPOS
     if(
         empty($servico_id) ||
@@ -63,14 +65,11 @@ try {
     $data = $partes[1];
     $hora = $partes[2];
 
-<<<<<<< HEAD
     // BUSCA VALOR DO SERVIÇO
-=======
 $horario_id = $partes[0];
 $data = $partes[1];
 $hora = $partes[2];
     // BUSCA VALOR
->>>>>>> 2082f3fbd201f4a194e8fe6ded3e296026e0614d
     $stmtServico = $pdo->prepare("
         SELECT valor
         FROM servicos
@@ -211,7 +210,6 @@ $hora = $partes[2];
         ':horario_id' => $horario_id
     ]);
 
-<<<<<<< HEAD
     // ABRE BOLETO
     echo "
         <!DOCTYPE html>
@@ -236,13 +234,11 @@ $hora = $partes[2];
         </body>
         </html>
         ";
-=======
     echo "
         <script>
             alert('Agendamento realizado com sucesso!');
         </script>
     ";
->>>>>>> 2082f3fbd201f4a194e8fe6ded3e296026e0614d
 
     exit();
 
