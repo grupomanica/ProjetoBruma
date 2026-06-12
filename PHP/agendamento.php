@@ -9,12 +9,6 @@
         exit();
     }
 
-    // Verifica se o usuário escolheu um horário na etapa anterior.
-    if(empty($_POST['horario'])){
-    header("Location: servicos.php");
-    exit();
-    }
-
     // Incluindo o autoload do DOM PDF
     require_once '../ASSETS/dompdf/autoload.inc.php';
     require_once("conexao.php");
@@ -59,15 +53,6 @@
             $dataBanco,
             $horaBanco) =
             explode('|', $horarioSelecionado);
-        
-                $dataHoraAgendamento = strtotime(
-            $dataBanco . ' ' . $horaBanco
-        );
-
-        if(($dataHoraAgendamento - time()) < 86400){
-            header("Location: servicos.php?erro=antecedencia");
-            exit();
-    }
     }
 
     //Converte dia da semana

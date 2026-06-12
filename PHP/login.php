@@ -32,12 +32,12 @@
             
             <div class="input-group-custom">
                 <i class="bi bi-envelope" aria-label="email"></i>
-                <input type="email" name="email" placeholder="E-mail do cliente" required>
+                <input type="email" name="email" placeholder="E-mail do cliente" style="color:white;" required>
             </div>
 
             <div class="input-group-custom">
                 <i class="bi bi-lock" aria-labelledby="senha"></i>
-                <input type="password" name="senha" placeholder="Senha" required>
+                <input type="password" name="senha" placeholder="Senha" style="color:white;" required>
             </div>
             <div id="mensagem"></div><br>
 
