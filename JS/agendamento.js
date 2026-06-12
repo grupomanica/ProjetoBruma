@@ -33,35 +33,6 @@ function prevStep() {
     showStep(currentStep);
 }
 
-/*function validarEtapa2(){
-            const nome = document.getElementById('nome');
-            const sobrenome = document.getElementById('sobrenome');
-            const dataNascimento = document.getElementById('dataNascimento');
-            const telefone = document.getElementById('telefone');
-
-            if(nome && nome.value.trim() === ''){
-                alert('Informe seu nome.');
-                return;
-            }
-
-            if(sobrenome && sobrenome.value.trim() === ''){
-                alert('Informe seu sobrenome.');
-                return;
-            }
-
-            if(dataNascimento && dataNascimento.value.trim() === ''){
-                alert('Informe sua data de nascimento.');
-                return;
-            }
-
-            if(telefone.value.trim() === ''){
-                alert('Informe seu telefone.');
-                return;
-            }
-
-            nextStep();
-        };*/
-
 function validarEtapa2(){
 
     const sobrenomeCampo =
@@ -150,12 +121,21 @@ profissionalSelect.addEventListener(
     atualizarProfissional
 );
 
-const campoDataNascimento = document.getElementById('dataNascimento');
-const inputHiddenNascimento = document.getElementById('dataNascimentoInput');
+    const campoDataNascimento = document.getElementById('dataNascimento');
+    const inputHiddenNascimento = document.getElementById('dataNascimentoInput');
 
-campoDataNascimento.addEventListener('change', function(){
-    inputHiddenNascimento.value = this.value;
-});
+    campoDataNascimento.addEventListener('change', function(){
+        inputHiddenNascimento.value = this.value;
+    });
+
+    if(campoDataNascimento && inputHiddenNascimento){
+        campoDataNascimento.addEventListener(
+            'change',
+            function(){
+                inputHiddenNascimento.value = this.value;
+            }
+        );
+    }
 
 function validarDados(){
 const nome = document.querySelector('input[type="text"]').value;
@@ -163,9 +143,7 @@ const sobrenome = document.querySelectorAll('input[type="text"]')[1].value;
 const telefone = document.getElementById('telefone').value;
 const dataNascimento = document.getElementById('dataNascimento').value;
 if(
-    nome.trim() === '' ||
     sobrenome.trim() === '' ||
-    telefone.trim() === '' ||
     dataNascimento.trim() === ''
 ){
     alert('Preencha todos os campos.');
@@ -193,20 +171,3 @@ document.getElementById('dataNascimentoInput').value =
 // vai para próxima etapa
 nextStep();
 }
-
-function atualizarTelefone(){
-document.getElementById(
-    'telefoneHidden'
-).value = document.getElementById(
-    'telefone'
-).value;
-}
-
-document.getElementById(
-'telefone'
-).addEventListener(
-'input',
-atualizarTelefone
-);
-
-atualizarTelefone();

@@ -4,15 +4,100 @@ require_once '../ASSETS/dompdf/autoload.inc.php';
 
 use Dompdf\Dompdf;
 
-$servico = $_POST['servico'] ?? '';
-$clinica = $_POST['clinica'] ?? '';
-$endereco = $_POST['endereco'] ?? '';
-$valor = $_POST['valor'] ?? '';
-$data = $_POST['data'] ?? '';
-$hora = $_POST['hora'] ?? '';
+require_once("conexao.php");
 
-$nomeCliente = "Cliente Bruma";
-$cpfCliente = "000.000.000-00";
+$pdo = conectar();
+
+$agendamento_id = $_GET['id'] ?? '';
+
+if(empty($agendamento_id)){
+    die("Agendamento não informado.");
+}
+
+
+$sql = "
+SELECT
+
+    a.id,
+    a.valor,
+
+    u.nome,
+    u.sobrenome,
+
+    c.nome AS clinica_nome,
+    c.logradouro,
+    c.bairro,
+    c.cidade,
+
+    s.nome AS servico_nome,
+
+    h.data_disponivel,
+    h.horario
+
+FROM agendamentos a
+
+INNER JOIN usuarios u
+    ON u.id = a.usuario_id
+
+INNER JOIN clinicas c
+    ON c.id = a.clinica_id
+
+INNER JOIN servicos s
+    ON s.id = a.servico_id
+
+INNER JOIN horarios_disponiveis h
+    ON h.id = a.horario_id
+
+WHERE a.id = :id
+";
+
+$stmt = $pdo->prepare($sql);
+
+$stmt->execute([
+    ':id' => $agendamento_id
+]);
+
+$dados = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if(!$dados){
+    die("Agendamento não encontrado.");
+}
+
+$servico = $dados['servico_nome'];
+
+$clinica = $dados['clinica_nome'];
+
+$endereco =
+    $dados['logradouro'] .
+    ', ' .
+    $dados['bairro'] .
+    ' - ' .
+    $dados['cidade'];
+
+$valor = number_format(
+    $dados['valor'],
+    2,
+    ',',
+    '.'
+);
+
+$data = date(
+    'd/m/Y',
+    strtotime($dados['data_disponivel'])
+);
+
+$hora = substr(
+    $dados['horario'],
+    0,
+    5
+);
+
+$nomeCliente =
+    $dados['nome'] .
+    ' ' .
+    $dados['sobrenome'];
+
+$cpfCliente = 'Não informado';
 
 $vencimento = date('d/m/Y', strtotime('+3 days'));
 $linhaDigitavel = "34191.79001 01043.510047 91020.150008 8 91230000012000";
@@ -184,3 +269,5 @@ $dompdf->stream(
     "boleto_bruma.pdf",
     ["Attachment" => false]
 );
+
+exit();
