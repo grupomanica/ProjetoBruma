@@ -92,3 +92,122 @@ document.addEventListener("click", function(e){
     }
 
 });
+
+// FILTRO DE CLIENTES
+const btnPesquisar =
+    document.getElementById("btnPesquisar");
+
+const btnLimpar =
+    document.getElementById("btnLimpar");
+
+if(btnPesquisar){
+    btnPesquisar.addEventListener(
+        "click",
+        buscarClientes
+    );
+}
+
+if(btnLimpar){
+
+    btnLimpar.addEventListener("click", () => {
+
+        document.getElementById("filtroNome").value = "";
+        document.getElementById("filtroData").value = "";
+
+        document.getElementById(
+            "resultadoClientes"
+        ).innerHTML = `
+            <div class="alert alert-info">
+                Digite um nome ou selecione uma data.
+            </div>
+        `;
+    });
+}
+
+function buscarClientes() {
+
+    const nome =
+        document.getElementById("filtroNome").value;
+
+    const data =
+        document.getElementById("filtroData").value;
+
+    fetch(
+        "buscar-clientes.php?nome="
+        + encodeURIComponent(nome)
+        + "&data="
+        + encodeURIComponent(data)
+    )
+
+    .then(response => response.json())
+
+    .then(clientes => {
+
+        let html = "";
+
+        if(clientes.length === 0){
+
+            html = `
+                <div class="alert alert-info">
+                    Nenhum cliente encontrado.
+                </div>
+            `;
+
+        }else{
+
+            html = `
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Data</th>
+                            <th>Horário</th>
+                            <th>Serviço</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            clientes.forEach(cliente => {
+
+             const dataBrasil = new Date(cliente.data_disponivel)
+    .toLocaleDateString('pt-BR');
+
+html += `
+    <tr>
+        <td>${cliente.cliente}</td>
+        <td>${dataBrasil}</td>
+        <td>${cliente.horario.substring(0,5)}</td>
+        <td>${cliente.servico}</td>
+    </tr>
+`;   
+
+            });
+
+            html += `
+                    </tbody>
+                </table>
+            `;
+        }
+
+        document.getElementById(
+            "resultadoClientes"
+        ).innerHTML = html;
+
+    })
+
+    .catch(error => {
+
+        console.error(error);
+
+        document.getElementById(
+            "resultadoClientes"
+        ).innerHTML = `
+            <div class="alert alert-danger">
+                Erro ao buscar clientes.
+            </div>
+        `;
+
+    });
+
+}

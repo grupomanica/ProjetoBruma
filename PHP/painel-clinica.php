@@ -97,6 +97,11 @@ try {
         <i class="bi bi-clock-history"></i> Histórico
     </a>
 
+     <a href="#" class="menu-item" data-page="clientes">
+        <i class="bi bi-people"></i>
+        Clientes Cadastrados
+    </a>
+
     <a href="#" class="menu-item" data-page="perfil">
         <i class="bi bi-gear"></i> Perfil
     </a>
@@ -1434,10 +1439,60 @@ $horariosDisponiveis = $stmtHorariosDisponiveis->fetchAll(PDO::FETCH_ASSOC);
 
         <?php endif; ?>
 
-        </div>
+    </div>
  
-        <!-- PERFIL -->
-        <div class="page d-none" id="perfil">
+   
+<!-- CLIENTES CADASTRADOS -->
+<div class="page d-none" id="clientes">
+
+    <h3>Clientes Cadastrados</h3>
+
+    <div class="row mb-3">
+
+        <div class="col-md-4">
+            <input
+                type="text"
+                id="filtroNome"
+                class="form-control"
+                placeholder="Pesquisar por nome">
+        </div>
+
+        <div class="col-md-3">
+            <input
+                type="date"
+                id="filtroData"
+                class="form-control">
+        </div>
+
+       <div class="col-md-3 d-flex align-items-end gap-2">
+
+    <button
+        id="btnPesquisar"
+        class="btn btn-primary">
+        Pesquisar
+    </button>
+
+    <button
+        id="btnLimpar"
+        class="btn btn-secondary">
+        Limpar
+    </button>
+
+</div> 
+
+    </div>
+
+    <div id="resultadoClientes">
+
+        <div class="alert alert-info">
+            Digite um nome ou selecione uma data.
+        </div>
+
+    </div>
+
+</div>
+<!-- PERFIL -->
+<div class="page d-none" id="perfil">
             <h3>Dados da Clínica</h3>
             <form class="mt-3">
                 <label for="nome">Nome da clínica:</label>
@@ -1474,8 +1529,6 @@ $horariosDisponiveis = $stmtHorariosDisponiveis->fetchAll(PDO::FETCH_ASSOC);
  
             </form>
         </div>
-    </div>
-</div>
  
 <!-- MODAL -->
 <div class="modal fade" id="modalServico" tabindex="-1">
@@ -1587,7 +1640,6 @@ $horariosDisponiveis = $stmtHorariosDisponiveis->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 </div>
-
  
 </body>
 </html>

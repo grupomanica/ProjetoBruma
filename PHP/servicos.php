@@ -25,47 +25,16 @@ try {
             s.clinica_id,
             c.nome AS nome_clinica,
             c.bairro
-
         FROM servicos s
 
         INNER JOIN clinicas c
-            ON c.id = s.clinica_id
+            ON s.clinica_id = c.id
 
-        WHERE EXISTS(
-            SELECT 1
+        INNER JOIN horarios_disponiveis h
+            ON h.servico_id = s.id
 
-            FROM horarios_disponiveis h
-
-            WHERE h.servico_id = s.id
-            AND h.status = 'livre'
-            AND h.data_disponivel >= CURDATE()
-
-            AND EXISTS (
-                SELECT 1
-
-                FROM profissionais p
-
-                WHERE p.clinica_id = s.clinica_id
-                AND p.status = 'ativo'
-
-                AND p.dias_semana LIKE CONCAT(
-                    '%',
-                    CASE DAYOFWEEK(h.data_disponivel)
-                        WHEN 1 THEN 'Domingo'
-                        WHEN 2 THEN 'Segunda'
-                        WHEN 3 THEN 'Terça'
-                        WHEN 4 THEN 'Quarta'
-                        WHEN 5 THEN 'Quinta'
-                        WHEN 6 THEN 'Sexta'
-                        WHEN 7 THEN 'Sábado'
-                    END,
-                    '%'
-                )
-
-                AND p.hora_inicio <= h.horario
-                AND p.hora_fim >= h.horario
-            )
-        )   
+        WHERE h.status = 'livre'
+        AND h.data_disponivel >= CURDATE()
     ";
 
     $params = [];
@@ -393,48 +362,22 @@ $bairros = $stmtBairros->fetchAll(PDO::FETCH_COLUMN);
             >
 
 <?php
+
 $stmtHorarios = $pdo->prepare("
-    SELECT h.*
-    FROM horarios_disponiveis h
-
-    WHERE h.servico_id = ?
-    AND h.status = 'livre'
-    AND h.data_disponivel >= CURDATE()
-
-    AND EXISTS (
-        SELECT 1
-        FROM profissionais p
-
-        WHERE p.clinica_id = ?
-        AND p.status = 'ativo'
-
-        AND p.dias_semana LIKE CONCAT(
-            '%',
-            CASE DAYOFWEEK(h.data_disponivel)
-                WHEN 1 THEN 'Domingo'
-                WHEN 2 THEN 'Segunda'
-                WHEN 3 THEN 'Terça'
-                WHEN 4 THEN 'Quarta'
-                WHEN 5 THEN 'Quinta'
-                WHEN 6 THEN 'Sexta'
-                WHEN 7 THEN 'Sábado'
-            END,
-            '%'
-        )
-
-        AND p.hora_inicio <= h.horario
-        AND p.hora_fim >= h.horario
-    )
-
-    ORDER BY h.data_disponivel ASC, h.horario ASC
+    SELECT *
+    FROM horarios_disponiveis
+    WHERE servico_id = ?
+    AND status = 'livre'
+    AND data_disponivel >= CURDATE()
+    ORDER BY data_disponivel ASC, horario ASC
 ");
 
 $stmtHorarios->execute([
-    $row['id'],
-    $row['clinica_id']
+    $row['id']
 ]);
 
 $horarios = $stmtHorarios->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
             <div class="horarios-box mb-3">
